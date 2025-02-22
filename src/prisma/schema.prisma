@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          UserRole  @default(USER)
+  accounts      Account[]
+  eventIds      BigInt[]
+}
+
+model Country {
+  id   String @id @default(uuid())
+  name String @unique
+
+  cities City[]
+}
+
+model City {
+  id        String @id @default(uuid())
+  countryId String
+  name      String @unique
+
+  country Country @relation(fields: [countryId], references: [id])
+  events  Event[]
+}
+
+model Event {
+  id               BigInt    @id
+  cityId           String
+  teamId           String
+  name             String
+  start            DateTime  @db.Date
+  end              DateTime  @db.Date
+  participantCount Int
+  genders          Boolean[]
+  ages             Int[]
+  participants     String
+  updatedAt        DateTime  @updatedAt
+  isDeleted        Boolean   @default(false)
+
+  city              City             @relation(fields: [cityId], references: [id])
+  team              Team             @relation(fields: [teamId], references: [id])
+  categories        Category[]
+  SportDiscipline   SportDiscipline? @relation(fields: [sportDisciplineId], references: [id])
+  sportDisciplineId String?
+}
+
+model Category {
+  id   String @id @default(uuid())
+  name String @unique
+
+  events Event[]
+}
+
+model Team {
+  id   String @id @default(uuid())
+  name String @unique
+
+  events Event[]
+}
+
+model SportDiscipline {
+  id   String @id @default(uuid())
+  name String @unique
+
+  events Event[]
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
