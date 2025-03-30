@@ -1,11 +1,10 @@
+import { Recommendations } from "@/components/recommendations/recommendations";
 import { auth } from "@/security/auth";
 
-import { Recommendations } from "@/components/recommendations/recommendations";
-
-export default async function RecommendationsPage(): Promise<React.ReactNode> {
+export default async function RecommendationsPage() {
     const session = await auth();
 
-    if (!session?.user?.id) {
+    if (!session?.user.id) {
         throw new Error("User not found");
     }
 

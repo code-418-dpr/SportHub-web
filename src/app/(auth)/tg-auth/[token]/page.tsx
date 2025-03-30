@@ -1,12 +1,8 @@
-import { ReactElement } from "react";
-import { auth } from "@/security/auth";
 import { CheckIcon } from "lucide-react";
 
-export default async function TgAuthPage({
-    params,
-}: {
-    params: Promise<{ token: string }>;
-}): Promise<ReactElement> {
+import { auth } from "@/security/auth";
+
+export default async function TgAuthPage({ params }: { params: Promise<{ token: string }> }) {
     const token = decodeURIComponent((await params).token);
 
     const decodedToken = Buffer.from(token, "base64").toString("utf-8");
@@ -23,7 +19,7 @@ export default async function TgAuthPage({
     }
 
     return (
-        <div className="flex w-[400px] flex-col items-center justify-center gap-y-4 space-y-4">
+        <div className="flex w-[400px] flex-col items-center justify-center space-y-4 gap-y-4">
             <h1 className="text-center text-3xl font-semibold">Подключение бота прошло успешно!</h1>
             <div className="flex w-full items-center justify-center">
                 <CheckIcon className="h-32 w-32 text-green-500" />

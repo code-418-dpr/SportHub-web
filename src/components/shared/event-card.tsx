@@ -1,10 +1,10 @@
-import { ExtendedEvent } from "@/prisma/types";
 import { CalendarIcon, FlagIcon, MapPinIcon, TrophyIcon, UsersIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { ExtendedEvent } from "@/prisma/types";
 
-export function EventCard({ event }: { event: ExtendedEvent }): React.ReactNode {
+export function EventCard({ event }: { event: ExtendedEvent }) {
     return (
         <Card className="w-full transition-shadow duration-300 hover:shadow-lg">
             <CardContent className="p-6">
@@ -22,27 +22,27 @@ export function EventCard({ event }: { event: ExtendedEvent }): React.ReactNode 
                 </div>
                 <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                     <div className="flex items-center space-x-2">
-                        <CalendarIcon className="h-5 w-5 text-muted-foreground" />
+                        <CalendarIcon className="text-muted-foreground h-5 w-5" />
                         <span>
                             {event.start.toLocaleDateString()} - {event.end.toLocaleDateString()}
                         </span>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <MapPinIcon className="h-5 w-5 text-muted-foreground" />
+                        <MapPinIcon className="text-muted-foreground h-5 w-5" />
                         <span>
                             {event.city.country.name}, {event.city.name}
                         </span>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <UsersIcon className="h-5 w-5 text-muted-foreground" />
+                        <UsersIcon className="text-muted-foreground h-5 w-5" />
                         <span>{event.participantCount} участников</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <TrophyIcon className="h-5 w-5 text-muted-foreground" />
-                        <span>{event.SportDiscipline?.name || "Без дисциплины"}</span>
+                        <TrophyIcon className="text-muted-foreground h-5 w-5" />
+                        <span>{event.SportDiscipline?.name ?? "Без дисциплины"}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <FlagIcon className="h-5 w-5 text-muted-foreground" />
+                        <FlagIcon className="text-muted-foreground h-5 w-5" />
                         <span>{event.team.name}</span>
                     </div>
                 </div>

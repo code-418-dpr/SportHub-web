@@ -1,12 +1,11 @@
+import { UserEvents } from "@/components/history/user-events";
 import { getUserEvents } from "@/data/event";
 import { auth } from "@/security/auth";
 
-import { UserEvents } from "@/components/history/user-events";
-
-export default async function History(): Promise<React.ReactNode> {
+export default async function History() {
     const session = await auth();
 
-    if (!session?.user?.id) {
+    if (!session?.user.id) {
         throw new Error("User not found");
     }
 

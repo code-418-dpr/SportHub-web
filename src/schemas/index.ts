@@ -1,4 +1,4 @@
-import * as z from "zod";
+import z from "zod";
 
 export const PersonalSettingsSchema = z.object({
     name: z.optional(z.string()),
@@ -17,7 +17,7 @@ export const PasswordSettingsSchema = z
         {
             message: "New password is required!",
             path: ["newPassword"],
-        }
+        },
     )
     .refine(
         (data) => {
@@ -26,7 +26,7 @@ export const PasswordSettingsSchema = z
         {
             message: "Password is required!",
             path: ["currentPassword"],
-        }
+        },
     );
 
 export const LoginSchema = z.object({

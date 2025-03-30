@@ -1,14 +1,10 @@
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
 import { OauthButtons } from "@/components/auth/oauth-buttons";
 import { LoginForm } from "@/components/forms/login-form";
+import { Button } from "@/components/ui/button";
 
-export default function LoginPage({
-    searchParams,
-}: {
-    searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default function LoginPage({ searchParams }: { searchParams: Record<string, string | string[] | undefined> }) {
     const registerUrl = `/register${
         Object.keys(searchParams).length > 0
             ? `?${new URLSearchParams(searchParams as Record<string, string>).toString()}`

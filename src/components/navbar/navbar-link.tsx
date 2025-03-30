@@ -11,8 +11,8 @@ export function NavbarLink({ href, children }: { href: string; children: React.R
     return (
         <Link
             className={cn(
-                "text-sm transition-colors hover:text-foreground/80",
-                pathname === href ? "text-foreground" : "text-foreground/60"
+                "hover:text-foreground/80 text-sm transition-colors",
+                pathname === href ? "text-foreground" : "text-foreground/60",
             )}
             href={href}
         >

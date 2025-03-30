@@ -1,15 +1,14 @@
+import { db } from "@/lib/db";
 import { Category, Event } from "@prisma/client";
 
-import { db } from "@/lib/db";
-
-export type GetCategories = {
+export interface GetCategories {
     name: string | undefined;
     events: Event[] | undefined;
     sortBy: string | undefined;
     sortDirection: string | undefined;
     page: number;
     pageSize: number;
-};
+}
 
 export const getFilteredCategoriesWithPagination = async (request: GetCategories) => {
     const whereClause: any = {};

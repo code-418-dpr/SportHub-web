@@ -1,15 +1,30 @@
-ARG NODE_VERSION=22.5-alpine
-FROM node:${NODE_VERSION} AS base
-WORKDIR /usr/src/far-backend
+ARG BUN_VERSION=1.2
+FROM oven/bun:${BUN_VERSION}-slim AS base
+WORKDIR /app
+COPY package.json .
 
-FROM base AS deps
-COPY package.json package-lock.json ./
-COPY src/prisma ./src/prisma/
-RUN npm install
+FROM base AS prod-deps
+COPY bun.lock .
+RUN --mount=type=cache,id=bun,target=~/.bun/install/cache \
+    bun install --frozen-lockfile --production --ignore-scripts
 
-FROM deps AS final
-COPY . ./
-RUN npm run build
+FROM prod-deps AS deps
+RUN --mount=type=cache,id=bun,target=~/.bun/install/cache \
+    bun install --frozen-lockfile --ignore-scripts
+
+FROM deps AS build
+COPY . .
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN --mount=type=cache,target=/app/.next/cache \
+    bun run build
+
+FROM prod-deps AS release
+COPY .env* .
+COPY --from=build /app/.next .next
+COPY --from=build /app/public public
+
+ENV NEXT_TELEMETRY_DISABLED=1
+USER bun
 EXPOSE 3000
-
-CMD npx prisma db push && npm run start
+CMD bun run db:push && bun run start

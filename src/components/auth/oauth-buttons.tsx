@@ -1,10 +1,12 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { DEFAULT_LOGIN_REDIRECT } from "@/security/routes";
+import React from "react";
+
 import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import { DEFAULT_LOGIN_REDIRECT } from "@/security/routes";
 
 export const OauthButtons = (): React.ReactNode => {
     const searchParams = useSearchParams();
@@ -12,7 +14,7 @@ export const OauthButtons = (): React.ReactNode => {
 
     const onClick = (provider: "yandex") => {
         signIn(provider, {
-            callbackUrl: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+            callbackUrl: callbackUrl ?? DEFAULT_LOGIN_REDIRECT,
         });
     };
 
@@ -23,7 +25,7 @@ export const OauthButtons = (): React.ReactNode => {
                     <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-background px-2 text-muted-foreground">Или</span>
+                    <span className="bg-background text-muted-foreground px-2">Или</span>
                 </div>
             </div>
             <div className="flex w-full items-center gap-x-2">
@@ -31,7 +33,9 @@ export const OauthButtons = (): React.ReactNode => {
                     size="lg"
                     className="w-full"
                     variant="outline"
-                    onClick={() => onClick("yandex")}
+                    onClick={() => {
+                        onClick("yandex");
+                    }}
                 >
                     Яндекс
                 </Button>

@@ -1,15 +1,14 @@
+import { db } from "@/lib/db";
 import { Event } from "@prisma/client";
 
-import { db } from "@/lib/db";
-
-export type GetTeam = {
+export interface GetTeam {
     name: string | undefined;
     events: Event[] | undefined;
     sortBy: string | undefined;
     sortDirection: string | undefined;
     page: number;
     pageSize: number;
-};
+}
 
 export const getFilteredTeamWithPagination = async (request: GetTeam) => {
     const whereClause: any = {};

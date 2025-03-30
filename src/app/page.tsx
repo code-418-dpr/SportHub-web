@@ -1,3 +1,4 @@
+import { EventsTable } from "@/components/home/events-table";
 import { getCategories } from "@/data/category";
 import { getCountries } from "@/data/country";
 import { getUserEventIds } from "@/data/event";
@@ -5,16 +6,14 @@ import { getSportDisciplines } from "@/data/sportDiscipline";
 import { getTeams } from "@/data/team";
 import { auth } from "@/security/auth";
 
-import { EventsTable } from "@/components/home/events-table";
-
-export default async function Home(): Promise<React.ReactNode> {
+export default async function Home() {
     const countries = await getCountries();
     const categories = await getCategories();
     const sportDisciplines = await getSportDisciplines();
     const teams = await getTeams();
 
     const session = await auth();
-    const userEventIds = session ? await getUserEventIds(session!.user!.id!) : null;
+    const userEventIds = session ? await getUserEventIds(session.user.id!) : null;
 
     return (
         <main className="flex-1 space-y-6 bg-gray-100">

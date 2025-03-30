@@ -1,13 +1,13 @@
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
 import { OauthButtons } from "@/components/auth/oauth-buttons";
 import { RegisterForm } from "@/components/forms/register-form";
+import { Button } from "@/components/ui/button";
 
 export default function RegisterPage({
     searchParams,
 }: {
-    searchParams: { [key: string]: string | string[] | undefined };
+    searchParams: Record<string, string | string[] | undefined>;
 }): React.ReactNode {
     const loginUrl = `/login${
         Object.keys(searchParams).length > 0

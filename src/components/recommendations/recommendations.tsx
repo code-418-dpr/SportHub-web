@@ -1,28 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+
+import { EventCard } from "@/components/shared/event-card";
 import { getRecommendations } from "@/data/event";
 import { ExtendedEvent } from "@/prisma/types";
 
-import { EventCard } from "@/components/shared/event-card";
-
 import { Button } from "../ui/button";
 
-type Props = {
+interface Props {
     userId: string;
-};
+}
 
-export function Recommendations({ userId }: Props): React.ReactNode {
+export function Recommendations({ userId }: Props) {
     const [recommendations, setRecommendations] = useState<ExtendedEvent[]>([]);
 
-    const fetchRecommendations = async () => {
+    const fetchRecommendations = useCallback(async () => {
         const recommendations = await getRecommendations(userId, 3);
         setRecommendations(recommendations);
-    };
+    }, [userId]);
 
     useEffect(() => {
         fetchRecommendations();
-    }, []);
+    }, [fetchRecommendations]);
 
     return (
         <div className="container mx-auto space-y-12 py-8">

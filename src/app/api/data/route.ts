@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { Category, City, Country, SportDiscipline, Team } from "@prisma/client";
 
 import { db } from "@/lib/db";
+import { Category } from "@prisma/client";
 
 export const maxDuration = 60;
 
@@ -21,9 +21,9 @@ interface JsonEvent {
     participants_count: number;
 }
 
-export async function POST(request: Request): Promise<NextResponse> {
+export async function POST(request: Request) {
     try {
-        const eventsData: JsonEvent[] = await request.json();
+        const eventsData: JsonEvent[] = (await request.json()) as JsonEvent[];
 
         for (const event of eventsData) {
             const {
@@ -148,7 +148,7 @@ export async function POST(request: Request): Promise<NextResponse> {
                 });
             }
 
-            const result = await SoftDelete(event);
+            await SoftDelete(event);
         }
 
         return NextResponse.json({ message: "Success" }, { status: 201 });
@@ -193,5 +193,3 @@ async function SoftDelete(event: JsonEvent) {
 
     return false;
 }
-
-async function SendNotification() {}

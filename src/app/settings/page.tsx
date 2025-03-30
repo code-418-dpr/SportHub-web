@@ -1,9 +1,9 @@
 "use client";
 
-import { useCurrentUser } from "@/hooks/use-current-user";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { PasswordSettingsForm } from "@/components/forms/password-settings-form";
 import { PersonalSettingsForm } from "@/components/forms/personal-settings-form";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 export default function SettingsPage() {
     const user = useCurrentUser();

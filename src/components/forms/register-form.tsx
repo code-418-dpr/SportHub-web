@@ -1,25 +1,20 @@
 "use client";
 
+import z from "zod";
+
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+
 import { useSearchParams } from "next/navigation";
+
 import { login } from "@/actions/login";
 import { register } from "@/actions/register";
+import { FormFeedback } from "@/components/shared/form-feedback";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { RegisterSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-
-import { Button } from "@/components/ui/button";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { FormFeedback } from "@/components/shared/form-feedback";
 
 export const RegisterForm = () => {
     const [error, setError] = useState<string | undefined>("");
@@ -83,12 +78,7 @@ export const RegisterForm = () => {
                             <FormItem>
                                 <FormLabel>Пароль</FormLabel>
                                 <FormControl>
-                                    <Input
-                                        {...field}
-                                        disabled={isPending}
-                                        placeholder="******"
-                                        type="password"
-                                    />
+                                    <Input {...field} disabled={isPending} placeholder="******" type="password" />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

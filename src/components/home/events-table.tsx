@@ -1,31 +1,19 @@
 "use client";
 
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
 import { useEffect, useMemo, useState } from "react";
+import { DateRange } from "react-day-picker";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getCitiesOfCountries } from "@/data/city";
 import { getFilteredEventWithPagination } from "@/data/event";
 import { ExtendedEvent } from "@/prisma/types";
 import { Category, City, Country, SportDiscipline, Team } from "@prisma/client";
 import { CaretDownIcon, CaretSortIcon, CaretUpIcon } from "@radix-ui/react-icons";
-import {
-    ColumnDef,
-    flexRender,
-    getCoreRowModel,
-    SortingState,
-    useReactTable,
-} from "@tanstack/react-table";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { DateRange } from "react-day-picker";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
+import { ColumnDef, SortingState, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 
 import { MultiCombobox } from "../shared/multi-combobox";
 import { Label } from "../ui/label";
@@ -38,7 +26,9 @@ export const columns: ColumnDef<ExtendedEvent>[] = [
         header: ({ column }) => (
             <Button
                 variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                onClick={() => {
+                    column.toggleSorting(column.getIsSorted() === "asc");
+                }}
                 className="font-inherit px-0 hover:bg-inherit"
             >
                 <span>Вид спорта</span>
@@ -51,11 +41,7 @@ export const columns: ColumnDef<ExtendedEvent>[] = [
                 )}
             </Button>
         ),
-        cell: ({ row }) => (
-            <div className="lowercase first-letter:uppercase">
-                {row.original.SportDiscipline?.name}
-            </div>
-        ),
+        cell: ({ row }) => <div className="lowercase first-letter:uppercase">{row.original.SportDiscipline?.name}</div>,
         size: 15,
     },
     {
@@ -63,7 +49,9 @@ export const columns: ColumnDef<ExtendedEvent>[] = [
         header: ({ column }) => (
             <Button
                 variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                onClick={() => {
+                    column.toggleSorting(column.getIsSorted() === "asc");
+                }}
                 className="font-inherit px-0 hover:bg-inherit"
             >
                 <span>Наименование спортивного мероприятия</span>
@@ -84,7 +72,9 @@ export const columns: ColumnDef<ExtendedEvent>[] = [
         header: ({ column }) => (
             <Button
                 variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                onClick={() => {
+                    column.toggleSorting(column.getIsSorted() === "asc");
+                }}
                 className="font-inherit px-0 hover:bg-inherit"
             >
                 <span>Место проведения</span>
@@ -110,7 +100,9 @@ export const columns: ColumnDef<ExtendedEvent>[] = [
         header: ({ column }) => (
             <Button
                 variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                onClick={() => {
+                    column.toggleSorting(column.getIsSorted() === "asc");
+                }}
                 className="font-inherit px-0 hover:bg-inherit"
             >
                 <span>Даты проведения</span>
@@ -135,7 +127,9 @@ export const columns: ColumnDef<ExtendedEvent>[] = [
         header: ({ column }) => (
             <Button
                 variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                onClick={() => {
+                    column.toggleSorting(column.getIsSorted() === "asc");
+                }}
                 className="font-inherit px-0 hover:bg-inherit"
             >
                 <span>Количество участников</span>
@@ -156,13 +150,13 @@ export const columns: ColumnDef<ExtendedEvent>[] = [
     },
 ];
 
-type Props = {
+interface Props {
     countries: Country[];
     categories: Category[];
     sportDisciplines: SportDiscipline[];
     teams: Team[];
     userEventIds: bigint[] | null;
-};
+}
 
 export function EventsTable({
     countries,
@@ -179,33 +173,29 @@ export function EventsTable({
         new Map([
             ["Мужской", false],
             ["Женский", false],
-        ])
+        ]),
     );
 
     const [sportFilter, setSportFilter] = useState<Map<string, boolean>>(
-        new Map(
-            sportDisciplines.map(
-                (sportDiscipline) => [sportDiscipline.name, false] as [string, boolean]
-            )
-        )
+        new Map(sportDisciplines.map((sportDiscipline) => [sportDiscipline.name, false] as [string, boolean])),
     );
 
     const [teamFilter, setTeamFilter] = useState<Map<string, boolean>>(
-        new Map(teams.map((team) => [team.name, false] as [string, boolean]))
+        new Map(teams.map((team) => [team.name, false] as [string, boolean])),
     );
 
     const [categoryFilter, setCategoryFilter] = useState<Map<string, boolean>>(
-        new Map(categories.map((category) => [category.name, false] as [string, boolean]))
+        new Map(categories.map((category) => [category.name, false] as [string, boolean])),
     );
 
     const [countryFilter, setCountryFilter] = useState<Map<string, boolean>>(
-        new Map(countries.map((country) => [country.name, false] as [string, boolean]))
+        new Map(countries.map((country) => [country.name, false] as [string, boolean])),
     );
 
     const [cities, setCities] = useState<City[]>([]);
 
     const [cityFilter, setCityFilter] = useState<Map<string, boolean>>(
-        new Map(cities.map((city) => [city.name, false] as [string, boolean]))
+        new Map(cities.map((city) => [city.name, false] as [string, boolean])),
     );
 
     const [dateRange, setDateRange] = useState<DateRange | undefined>();
@@ -261,11 +251,7 @@ export function EventsTable({
             if (selectedCountryIds.length > 0) {
                 const citiesForCountries = await getCitiesOfCountries(selectedCountryIds);
                 setCities(citiesForCountries);
-                setCityFilter(
-                    new Map(
-                        citiesForCountries.map((city) => [city.name, false] as [string, boolean])
-                    )
-                );
+                setCityFilter(new Map(citiesForCountries.map((city) => [city.name, false] as [string, boolean])));
             } else {
                 setCities([]);
                 setCityFilter(new Map());
@@ -287,7 +273,7 @@ export function EventsTable({
             start: Date | undefined,
             end: Date | undefined,
             sortBy: string | undefined,
-            sortDirection: "asc" | "desc" | undefined
+            sortDirection: "asc" | "desc" | undefined,
         ): Promise<void> => {
             const { events: eventsData, total: rowCount } = await getFilteredEventWithPagination({
                 page: pagination.pageIndex,
@@ -339,7 +325,7 @@ export function EventsTable({
             dateRange?.from,
             dateRange?.to,
             sorting[0]?.id,
-            sorting[0]?.desc ? "desc" : "asc"
+            sorting[0]?.desc ? "desc" : "asc",
         );
     }, [
         nameFilter,
@@ -366,15 +352,13 @@ export function EventsTable({
                 <Input
                     placeholder="Поиск по названию"
                     value={nameFilter}
-                    onChange={(event) => setNameFilter(event.target.value)}
-                    className="w-full bg-background"
+                    onChange={(event) => {
+                        setNameFilter(event.target.value);
+                    }}
+                    className="bg-background w-full"
                 />
                 <div className="flex flex-wrap items-center gap-4">
-                    <MultiCombobox
-                        title="Вид спорта"
-                        values={sportFilter}
-                        setValues={setSportFilter}
-                    />
+                    <MultiCombobox title="Вид спорта" values={sportFilter} setValues={setSportFilter} />
                     <MultiCombobox title="Состав" values={teamFilter} setValues={setTeamFilter} />
                     <MultiCombobox
                         title="Категория"
@@ -384,16 +368,11 @@ export function EventsTable({
                     />
                 </div>
                 <div className="flex flex-wrap items-center gap-4">
-                    <MultiCombobox
-                        title="Пол"
-                        values={genderFilter}
-                        setValues={setGenderFilter}
-                        hideSearch={true}
-                    />
+                    <MultiCombobox title="Пол" values={genderFilter} setValues={setGenderFilter} hideSearch={true} />
                     <div className="flex items-center gap-2">
                         <Label>Возраст:</Label>
                         <Input
-                            className="w-12 bg-background"
+                            className="bg-background w-12"
                             type="number"
                             min={0}
                             max={100}
@@ -410,22 +389,12 @@ export function EventsTable({
                     </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-4">
-                    <MultiCombobox
-                        title="Страна"
-                        values={countryFilter}
-                        setValues={setCountryFilter}
-                    />
-                    {cities.length > 0 && (
-                        <MultiCombobox
-                            title="Город"
-                            values={cityFilter}
-                            setValues={setCityFilter}
-                        />
-                    )}
+                    <MultiCombobox title="Страна" values={countryFilter} setValues={setCountryFilter} />
+                    {cities.length > 0 && <MultiCombobox title="Город" values={cityFilter} setValues={setCityFilter} />}
                 </div>
                 <DatePicker dateRange={dateRange} setDateRange={setDateRange} className="w-full" />
             </div>
-            <div className="overflow-x-auto rounded-md border bg-background">
+            <div className="bg-background overflow-x-auto rounded-md border">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -435,18 +404,13 @@ export function EventsTable({
                                         <TableHead
                                             key={header.id}
                                             className={`py-4 ${
-                                                header.column.id !== "title"
-                                                    ? "hidden md:table-cell"
-                                                    : ""
+                                                header.column.id !== "title" ? "hidden md:table-cell" : ""
                                             }`}
                                             style={{ width: `${header.getSize()}%` }}
                                         >
                                             {header.isPlaceholder
                                                 ? null
-                                                : flexRender(
-                                                      header.column.columnDef.header,
-                                                      header.getContext()
-                                                  )}
+                                                : flexRender(header.column.columnDef.header, header.getContext())}
                                         </TableHead>
                                     );
                                 })}
@@ -454,27 +418,24 @@ export function EventsTable({
                         ))}
                     </TableHeader>
                     <TableBody>
-                        {table.getRowModel().rows?.length ? (
+                        {table.getRowModel().rows.length ? (
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
-                                    onClick={() => handleRowClick(row.original)}
+                                    onClick={() => {
+                                        handleRowClick(row.original);
+                                    }}
                                     className="cursor-pointer"
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell
                                             key={cell.id}
                                             className={`py-4 ${
-                                                cell.column.id !== "title"
-                                                    ? "hidden md:table-cell"
-                                                    : ""
+                                                cell.column.id !== "title" ? "hidden md:table-cell" : ""
                                             }`}
                                         >
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                         </TableCell>
                                     ))}
                                 </TableRow>
@@ -490,12 +451,14 @@ export function EventsTable({
                 </Table>
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
-                <div className="flex-1 text-sm text-muted-foreground">{rowsShownString}</div>
+                <div className="text-muted-foreground flex-1 text-sm">{rowsShownString}</div>
                 <div className="space-x-2">
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => table.previousPage()}
+                        onClick={() => {
+                            table.previousPage();
+                        }}
                         disabled={!table.getCanPreviousPage()}
                     >
                         <ChevronLeft />
@@ -503,7 +466,9 @@ export function EventsTable({
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => table.nextPage()}
+                        onClick={() => {
+                            table.nextPage();
+                        }}
                         disabled={!table.getCanNextPage()}
                     >
                         <ChevronRight />

@@ -1,32 +1,20 @@
 "use client";
 
+import z from "zod";
+
 import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+
+import { useSession } from "next-auth/react";
+
 import { setPersonalSettings } from "@/actions/settings";
+import { FormFeedback } from "@/components/shared/form-feedback";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useCurrentUser } from "@/hooks/use-current-user";
 import { PersonalSettingsSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "next-auth/react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-
-import { useCurrentUser } from "@/hooks/use-current-user";
-import { Button } from "@/components/ui/button";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import { FormFeedback } from "@/components/shared/form-feedback";
 
 export function PersonalSettingsForm() {
     const user = useCurrentUser();
@@ -39,8 +27,8 @@ export function PersonalSettingsForm() {
     const form = useForm<z.infer<typeof PersonalSettingsSchema>>({
         resolver: zodResolver(PersonalSettingsSchema),
         defaultValues: {
-            name: user?.name || undefined,
-            email: user?.email || undefined,
+            name: user?.name ?? undefined,
+            email: user?.email ?? undefined,
         },
     });
 
@@ -57,7 +45,9 @@ export function PersonalSettingsForm() {
                         setSuccess(data.success);
                     }
                 })
-                .catch(() => setError("Something went wrong!"));
+                .catch(() => {
+                    setError("Something went wrong!");
+                });
         });
     };
 

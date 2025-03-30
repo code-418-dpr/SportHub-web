@@ -1,15 +1,14 @@
-import { SportDiscipline, Event } from "@prisma/client";
-
 import { db } from "@/lib/db";
+import { Event } from "@prisma/client";
 
-export type GetSportDiscipline = {
+export interface GetSportDiscipline {
     name: string | undefined;
     events: Event[] | undefined;
     sortBy: string | undefined;
     sortDirection: string | undefined;
     page: number;
     pageSize: number;
-};
+}
 
 export const getFilteredSportDisciplineWithPagination = async (request: GetSportDiscipline) => {
     const whereClause: any = {};

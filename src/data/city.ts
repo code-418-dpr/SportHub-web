@@ -1,10 +1,9 @@
 "use server";
 
+import { db } from "@/lib/db";
 import { City, Country, Event } from "@prisma/client";
 
-import { db } from "@/lib/db";
-
-export type GetCities = {
+export interface GetCities {
     name: string | undefined;
     countryId: string | undefined;
     country: Country | undefined;
@@ -13,7 +12,7 @@ export type GetCities = {
     sortDirection: string | undefined;
     page: number;
     pageSize: number;
-};
+}
 
 export const getFilteredCitiesWithPagination = async (request: GetCities): Promise<City[]> => {
     const whereClause: any = {};

@@ -1,40 +1,39 @@
+import React from "react";
+
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { auth } from "@/security/auth";
 import { SessionProvider } from "next-auth/react";
+import { Inter } from "next/font/google";
+
+import { Navbar } from "@/components/navbar/navbar";
+import { ThemeProvider } from "@/components/theming/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+import siteMetadata from "@/conf/site-metadata";
+import { cn } from "@/lib/utils";
+import { auth } from "@/security/auth";
 
 import "./globals.css";
-
-import { siteConfig } from "@/config/site";
-import { cn } from "@/lib/utils";
-import { Toaster } from "@/components/ui/sonner";
-import { Navbar } from "@/components/navbar/navbar";
-import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: siteConfig.name,
-    description: siteConfig.description,
+    title: { default: siteMetadata.name, template: `%s | ${siteMetadata.name}` },
+    applicationName: siteMetadata.name,
+    description: siteMetadata.description,
+    authors: [siteMetadata.authors],
 };
 
 export default async function RootLayout({
     children,
-}: {
+}: Readonly<{
     children: React.ReactNode;
-}): Promise<React.ReactNode> {
+}>) {
     const session = await auth();
 
     return (
         <SessionProvider session={session}>
-            <html lang="en">
+            <html lang="ru" suppressHydrationWarning>
                 <body className={cn(inter.className, "min-h-screen")}>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="light"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
+                    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
                         <Toaster />
                         <div className="flex min-h-full w-full flex-col pt-16">
                             <Navbar />

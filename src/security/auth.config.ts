@@ -1,9 +1,11 @@
-import { getUserByEmail } from "@/data/user";
-import { LoginSchema } from "@/schemas";
 import bcrypt from "bcryptjs";
+
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Yandex from "next-auth/providers/yandex";
+
+import { getUserByEmail } from "@/data/user";
+import { LoginSchema } from "@/schemas";
 
 export default {
     providers: [
@@ -19,7 +21,7 @@ export default {
                     const { email, password } = validatedFields.data;
 
                     const user = await getUserByEmail(email);
-                    if (!user || !user.password) {
+                    if (!user?.password) {
                         return null;
                     }
 

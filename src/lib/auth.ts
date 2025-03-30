@@ -10,5 +10,5 @@ export const currentUser = async () => {
 export const currentRole = async (): Promise<UserRole | undefined> => {
     const session = await auth();
 
-    return session?.user?.role;
+    return session?.user.role;
 };

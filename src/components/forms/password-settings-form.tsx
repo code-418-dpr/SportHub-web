@@ -1,24 +1,19 @@
 "use client";
 
+import z from "zod";
+
 import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+
+import { useSession } from "next-auth/react";
+
 import { setPasswordSettings } from "@/actions/settings";
+import { FormFeedback } from "@/components/shared/form-feedback";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { PasswordSettingsSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "next-auth/react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-
-import { Button } from "@/components/ui/button";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { FormFeedback } from "@/components/shared/form-feedback";
 
 export function PasswordSettingsForm() {
     const { update } = useSession();
@@ -49,7 +44,9 @@ export function PasswordSettingsForm() {
 
                     form.reset();
                 })
-                .catch(() => setError("Something went wrong!"));
+                .catch(() => {
+                    setError("Something went wrong!");
+                });
         });
     };
 
@@ -64,12 +61,7 @@ export function PasswordSettingsForm() {
                             <FormItem>
                                 <FormLabel>Текущий пароль</FormLabel>
                                 <FormControl>
-                                    <Input
-                                        {...field}
-                                        placeholder="******"
-                                        type="password"
-                                        disabled={isPending}
-                                    />
+                                    <Input {...field} placeholder="******" type="password" disabled={isPending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -82,12 +74,7 @@ export function PasswordSettingsForm() {
                             <FormItem>
                                 <FormLabel>Новый пароль</FormLabel>
                                 <FormControl>
-                                    <Input
-                                        {...field}
-                                        placeholder="******"
-                                        type="password"
-                                        disabled={isPending}
-                                    />
+                                    <Input {...field} placeholder="******" type="password" disabled={isPending} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

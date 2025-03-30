@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { logout } from "@/actions/logout";
 import { ArrowRightIcon, LogOutIcon, SettingsIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils";
-import { useCurrentUser } from "@/hooks/use-current-user";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+import { logout } from "@/actions/logout";
+import { UserAvatar } from "@/components/auth/user-avatar";
 import { buttonVariants } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -14,7 +14,8 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { UserAvatar } from "@/components/auth/user-avatar";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { cn } from "@/lib/utils";
 
 export const UserButton = (): React.ReactNode => {
     const user = useCurrentUser();

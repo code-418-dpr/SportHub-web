@@ -1,11 +1,11 @@
+import NextAuth from "next-auth";
+
 import { getAccountByUserId } from "@/data/account";
 import { getUserById } from "@/data/user";
+import { db } from "@/lib/db";
 import authConfig from "@/security/auth.config";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { UserRole } from "@prisma/client";
-import NextAuth from "next-auth";
-
-import { db } from "@/lib/db";
 
 export const {
     handlers: { GET, POST },
@@ -38,7 +38,7 @@ export const {
 
             if (session.user) {
                 session.user.name = token.name;
-                session.user.email = token.email as string;
+                session.user.email = token.email!;
                 session.user.isOAuth = token.isOAuth as boolean;
             }
 

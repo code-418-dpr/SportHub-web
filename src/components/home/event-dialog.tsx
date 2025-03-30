@@ -1,31 +1,26 @@
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { addEventToUser, removeEventFromUser } from "@/data/event";
-import { ExtendedEvent } from "@/prisma/types";
 
-import { cn } from "@/lib/utils";
+import Link from "next/link";
+
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { addEventToUser, removeEventFromUser } from "@/data/event";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
+import { ExtendedEvent } from "@/prisma/types";
 
 import { Button, buttonVariants } from "../ui/button";
 
-type Props = {
+interface Props {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
     event: ExtendedEvent | null;
     userEventIds: bigint[] | null;
-};
+}
 
 export function EventDialog({ isOpen, setIsOpen, event, userEventIds }: Props): React.ReactNode {
     const user = useCurrentUser();
     const [participating, setParticipating] = useState(
-        event ? (userEventIds ? userEventIds.includes(event.id) : false) : false
+        event ? (userEventIds ? userEventIds.includes(event.id) : false) : false,
     );
 
     useEffect(() => {
@@ -54,15 +49,15 @@ export function EventDialog({ isOpen, setIsOpen, event, userEventIds }: Props): 
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-3 items-center gap-4">
-                        <span className="text-right text-muted-foreground">Идентификатор:</span>
+                        <span className="text-muted-foreground text-right">Идентификатор:</span>
                         <div className="col-span-2">{event.id.toString()}</div>
                     </div>
                     <div className="grid grid-cols-3 items-center gap-4">
-                        <span className="text-right text-muted-foreground">Участники:</span>
+                        <span className="text-muted-foreground text-right">Участники:</span>
                         <div className="col-span-2">{event.participants}</div>
                     </div>
                     <div className="grid grid-cols-3 items-center gap-4">
-                        <span className="text-right text-muted-foreground">Категории:</span>
+                        <span className="text-muted-foreground text-right">Категории:</span>
                         <div className="col-span-2">
                             {event.categories.length > 0
                                 ? event.categories.map((category) => category.name).join(", ")
@@ -70,25 +65,23 @@ export function EventDialog({ isOpen, setIsOpen, event, userEventIds }: Props): 
                         </div>
                     </div>
                     <div className="grid grid-cols-3 items-center gap-4">
-                        <span className="text-right text-muted-foreground">Дата начала:</span>
+                        <span className="text-muted-foreground text-right">Дата начала:</span>
                         <div className="col-span-2">{event.start.toLocaleDateString()}</div>
                     </div>
                     <div className="grid grid-cols-3 items-center gap-4">
-                        <span className="text-right text-muted-foreground">Дата окончания:</span>
+                        <span className="text-muted-foreground text-right">Дата окончания:</span>
                         <div className="col-span-2">{event.end.toLocaleDateString()}</div>
                     </div>
                     <div className="grid grid-cols-3 items-center gap-4">
-                        <span className="text-right text-muted-foreground">Страна:</span>
+                        <span className="text-muted-foreground text-right">Страна:</span>
                         <div className="col-span-2">{event.city.country.name}</div>
                     </div>
                     <div className="grid grid-cols-3 items-center gap-4">
-                        <span className="text-right text-muted-foreground">Город:</span>
+                        <span className="text-muted-foreground text-right">Город:</span>
                         <div className="col-span-2">{event.city.name}</div>
                     </div>
                     <div className="grid grid-cols-3 items-center gap-4">
-                        <span className="text-right text-muted-foreground">
-                            Количество участников:
-                        </span>
+                        <span className="text-muted-foreground text-right">Количество участников:</span>
                         <div className="col-span-2">{event.participantCount}</div>
                     </div>
                 </div>
@@ -97,7 +90,7 @@ export function EventDialog({ isOpen, setIsOpen, event, userEventIds }: Props): 
                         <Link
                             className={cn(
                                 buttonVariants({ variant: "default" }),
-                                "w-full bg-blue-500 py-6 text-lg hover:bg-blue-600"
+                                "w-full bg-blue-500 py-6 text-lg hover:bg-blue-600",
                             )}
                             href={getEventLink(event)}
                         >
@@ -113,11 +106,7 @@ export function EventDialog({ isOpen, setIsOpen, event, userEventIds }: Props): 
                                     Отменить участие
                                 </Button>
                             ) : (
-                                <Button
-                                    variant="outline"
-                                    onClick={handleParticipate}
-                                    className="w-full py-6 text-lg"
-                                >
+                                <Button variant="outline" onClick={handleParticipate} className="w-full py-6 text-lg">
                                     Участвую!
                                 </Button>
                             ))}
@@ -130,10 +119,7 @@ export function EventDialog({ isOpen, setIsOpen, event, userEventIds }: Props): 
 
 function getEventLink(event: ExtendedEvent): string {
     const start = event.start.toISOString().split("T")[0].replace(/-/g, "");
-    const end = new Date(event.end.getTime() + 24 * 60 * 60 * 1000)
-        .toISOString()
-        .split("T")[0]
-        .replace(/-/g, "");
+    const end = new Date(event.end.getTime() + 24 * 60 * 60 * 1000).toISOString().split("T")[0].replace(/-/g, "");
 
     const details = `Место проведения: ${event.city.country.name}, ${event.city.name}`;
 

@@ -1,19 +1,13 @@
 "use client";
 
-import { ReactElement, useMemo, useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { ReactElement, useMemo, useState } from "react";
+
 import { Button } from "@/components/ui/button";
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-} from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 export function MultiCombobox({
     title,
@@ -36,33 +30,20 @@ export function MultiCombobox({
             return Array.from(values.keys());
         }
 
-        return Array.from(values.keys()).filter((key) =>
-            key.toLowerCase().includes(search.toLowerCase())
-        );
+        return Array.from(values.keys()).filter((key) => key.toLowerCase().includes(search.toLowerCase()));
     }, [values, search]);
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className="flex gap-2 pr-2"
-                >
+                <Button variant="outline" role="combobox" aria-expanded={open} className="flex gap-2 pr-2">
                     <span>{title}</span>
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className={cn("w-full p-0", className)}>
                 <Command shouldFilter={false}>
-                    {!hideSearch && (
-                        <CommandInput
-                            placeholder="Поиск..."
-                            value={search}
-                            onValueChange={setSearch}
-                        />
-                    )}
+                    {!hideSearch && <CommandInput placeholder="Поиск..." value={search} onValueChange={setSearch} />}
                     <CommandList>
                         <CommandEmpty>Ничего не найдено.</CommandEmpty>
                         <CommandGroup>
@@ -71,20 +52,12 @@ export function MultiCombobox({
                                     key={key}
                                     value={key}
                                     onSelect={(currentValue) => {
-                                        setValues(
-                                            new Map(values).set(
-                                                currentValue,
-                                                !values.get(currentValue)
-                                            )
-                                        );
+                                        setValues(new Map(values).set(currentValue, !values.get(currentValue)));
                                     }}
                                     className="pr-4"
                                 >
                                     <Check
-                                        className={cn(
-                                            "mr-1 h-4 w-4",
-                                            values.get(key) ? "opacity-100" : "opacity-0"
-                                        )}
+                                        className={cn("mr-1 h-4 w-4", values.get(key) ? "opacity-100" : "opacity-0")}
                                     />
                                     {key}
                                 </CommandItem>

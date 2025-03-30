@@ -1,15 +1,14 @@
+import { db } from "@/lib/db";
 import { City } from "@prisma/client";
 
-import { db } from "@/lib/db";
-
-export type GetCountries = {
+export interface GetCountries {
     name: string | undefined;
     cities: City[] | undefined;
     sortBy: string | undefined;
     sortDirection: string | undefined;
     page: number;
     pageSize: number;
-};
+}
 
 export const getFilteredCountriseWithPagination = async (request: GetCountries) => {
     const whereClause: any = {};

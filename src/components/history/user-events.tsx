@@ -1,6 +1,5 @@
-import { ExtendedEvent } from "@/prisma/types";
-
 import { EventCard } from "@/components/shared/event-card";
+import { ExtendedEvent } from "@/prisma/types";
 
 export function UserEvents({ events }: { events: ExtendedEvent[] }): React.ReactNode {
     const pastEvents = events.filter((event) => event.start < new Date());
@@ -30,7 +29,7 @@ export function UserEvents({ events }: { events: ExtendedEvent[] }): React.React
             )}
             {pastEvents.length === 0 && futureEvents.length === 0 && (
                 <div className="flex items-center justify-center">
-                    <p className="text-lg text-muted-foreground">Нет событий</p>
+                    <p className="text-muted-foreground text-lg">Нет событий</p>
                 </div>
             )}
         </div>

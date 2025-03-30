@@ -1,11 +1,10 @@
 "use server";
 
+import { db } from "@/lib/db";
 import { ExtendedEvent } from "@/prisma/types";
 import { Prisma } from "@prisma/client";
 
-import { db } from "@/lib/db";
-
-export type GetEvent = {
+export interface GetEvent {
     sportIds?: string[] | undefined;
     teamIds?: string[] | undefined;
     categoriesIds?: string[] | undefined;
@@ -21,16 +20,14 @@ export type GetEvent = {
     sortDirection?: string | undefined;
     page: number;
     pageSize: number;
-};
+}
 
-type EventsWithCount = {
+interface EventsWithCount {
     events: ExtendedEvent[];
     total: number;
-};
+}
 
-export const getFilteredEventWithPagination = async (
-    request: GetEvent
-): Promise<EventsWithCount> => {
+export const getFilteredEventWithPagination = async (request: GetEvent): Promise<EventsWithCount> => {
     const whereClause: Prisma.EventWhereInput = {};
 
     if (request.name) {
@@ -247,10 +244,7 @@ export const removeEventFromUser = async (userId: string, eventId: bigint): Prom
     });
 };
 
-export const getRecommendations = async (
-    userId: string | undefined,
-    count: number
-): Promise<ExtendedEvent[]> => {
+export const getRecommendations = async (userId: string | undefined, count: number): Promise<ExtendedEvent[]> => {
     let sportId: string | undefined;
     let teamId: string | undefined;
 
@@ -260,7 +254,7 @@ export const getRecommendations = async (
         });
 
         if (user?.eventIds.length) {
-            const eventId = user?.eventIds[Math.floor(Math.random() * user?.eventIds.length)];
+            const eventId = user.eventIds[Math.floor(Math.random() * user.eventIds.length)];
             const event = await db.event.findUnique({
                 where: { id: eventId },
                 include: {
@@ -269,7 +263,7 @@ export const getRecommendations = async (
                 },
             });
             sportId = event?.SportDiscipline?.id;
-            teamId = event?.team?.id;
+            teamId = event?.team.id;
         }
     }
 
