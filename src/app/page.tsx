@@ -16,7 +16,7 @@ export default async function Home() {
     const userEventIds = session ? await getUserEventIds(session.user.id!) : null;
 
     return (
-        <main className="flex-1 space-y-6 bg-gray-100">
+        <main className="flex-1 space-y-6">
             <div className="mx-auto max-w-[1800px] p-4">
                 <EventsTable
                     countries={countries}

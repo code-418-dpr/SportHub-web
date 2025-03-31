@@ -9,7 +9,7 @@ export default async function RecommendationsPage() {
     }
 
     return (
-        <main className="flex-1 space-y-6 bg-gray-100">
+        <main className="flex-1 space-y-6">
             <Recommendations userId={session.user.id} />
         </main>
     );

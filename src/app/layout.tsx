@@ -35,10 +35,8 @@ export default async function RootLayout({
                 <body className={cn(inter.className, "min-h-screen")}>
                     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
                         <Toaster />
-                        <div className="flex min-h-full w-full flex-col pt-16">
-                            <Navbar />
-                            {children}
-                        </div>
+                        <Navbar />
+                        <div className="mt-10">{children}</div>
                     </ThemeProvider>
                 </body>
             </html>

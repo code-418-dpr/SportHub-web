@@ -12,7 +12,7 @@ export default async function History() {
     const events = await getUserEvents(session.user.id);
 
     return (
-        <main className="flex-1 space-y-6 bg-gray-100">
+        <main className="flex-1 space-y-6">
             <UserEvents events={events} />
         </main>
     );

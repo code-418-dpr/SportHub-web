@@ -13,7 +13,7 @@ export const OauthButtons = (): React.ReactNode => {
     const callbackUrl = searchParams.get("callbackUrl");
 
     const onClick = (provider: "yandex") => {
-        signIn(provider, {
+        void signIn(provider, {
             callbackUrl: callbackUrl ?? DEFAULT_LOGIN_REDIRECT,
         });
     };

@@ -1,21 +1,17 @@
 "use client";
 
+import React from "react";
+
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
-import { cn } from "@/lib/utils";
+interface NavbarLinkProps {
+    href: string;
+    children: React.ReactNode;
+}
 
-export function NavbarLink({ href, children }: { href: string; children: React.ReactNode }) {
-    const pathname = usePathname();
-
+export function NavbarLink({ href, children }: NavbarLinkProps) {
     return (
-        <Link
-            className={cn(
-                "hover:text-foreground/80 text-sm transition-colors",
-                pathname === href ? "text-foreground" : "text-foreground/60",
-            )}
-            href={href}
-        >
+        <Link className="text-muted-foreground hover:text-foreground text-sm transition-colors" href={href}>
             {children}
         </Link>
     );
