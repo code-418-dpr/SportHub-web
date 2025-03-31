@@ -2,6 +2,8 @@
 
 import { ArrowRightIcon, LogOutIcon, SettingsIcon } from "lucide-react";
 
+import React from "react";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -22,32 +24,37 @@ export const UserButton = (): React.ReactNode => {
     const pathname = usePathname();
 
     if (pathname === "/login" || pathname === "/register") {
-        return <div></div>;
+        return <></>;
     }
 
     if (!user) {
         return (
             <Link href="/login" className={cn(buttonVariants(), "gap-2")}>
                 Войти
-                <ArrowRightIcon className="size-4" />
+                <ArrowRightIcon className="size-5" />
             </Link>
         );
     }
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger className="cursor-pointer">
                 <UserAvatar user={user} />
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-40" align="end">
+            <DropdownMenuContent align="end">
                 <Link href="/settings">
                     <DropdownMenuItem className="cursor-pointer">
-                        <SettingsIcon className="mr-2 h-4 w-4" />
+                        <SettingsIcon className="mr-2 size-4" />
                         Настройки
                     </DropdownMenuItem>
                 </Link>
-                <DropdownMenuItem className="cursor-pointer" onClick={() => logout()}>
-                    <LogOutIcon className="mr-2 h-4 w-4" />
+                <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() => {
+                        void logout();
+                    }}
+                >
+                    <LogOutIcon className="mr-2 size-4" />
                     Выйти
                 </DropdownMenuItem>
             </DropdownMenuContent>
