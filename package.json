@@ -90,7 +90,7 @@
         "shadcn": "^2.4.0-canary.17",
         "sonner": "^1.7.4",
         "stylelint": "^16.17.0",
-        "stylelint-config-recommended": "^15.0.0",
+        "stylelint-config-recommended": "^16.0.0",
         "stylelint-config-tailwindcss": "^1.0.0",
         "tailwind-merge": "^2.6.0",
         "tailwindcss": "^4.0.17",
