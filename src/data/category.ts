@@ -1,29 +1,31 @@
-import { db } from "@/lib/db";
-import { Category, Event } from "@prisma/client";
+"use server";
 
-export interface GetCategories {
-    name: string | undefined;
-    events: Event[] | undefined;
-    sortBy: string | undefined;
-    sortDirection: string | undefined;
+import { db } from "@/lib/db";
+import { Event } from "@prisma/client";
+
+interface GetCategories {
+    name?: string;
+    events?: Event[];
+    sortBy?: string;
+    sortDirection?: string;
     page: number;
     pageSize: number;
 }
 
 export const getFilteredCategoriesWithPagination = async (request: GetCategories) => {
-    const whereClause: any = {};
+    // const whereClause: any = {};
+    //
+    // if (request.name) {
+    //     whereClause.name = request.name;
+    // }
+    //
+    // const direction: any = request.sortBy
+    //     ? {
+    //           [request.sortBy]: request.sortDirection === "asc" ? "asc" : "desc",
+    //       }
+    //     : "asc";
 
-    if (request.name) {
-        whereClause.name = request.name;
-    }
-
-    const direction: any = request.sortBy
-        ? {
-              [request.sortBy]: request.sortDirection === "asc" ? "asc" : "desc",
-          }
-        : "asc";
-
-    const result = await db.category.findMany({
+    return db.category.findMany({
         where: {
             ...(request.name ? { name: request.name } : {}),
         },
@@ -33,11 +35,8 @@ export const getFilteredCategoriesWithPagination = async (request: GetCategories
             events: true,
         },
     });
-
-    return result;
 };
 
 export const getCategories = async () => {
-    const result = await db.category.findMany();
-    return result;
+    return db.category.findMany();
 };

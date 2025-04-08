@@ -1,29 +1,31 @@
+"use server";
+
 import { db } from "@/lib/db";
 import { Event } from "@prisma/client";
 
-export interface GetSportDiscipline {
-    name: string | undefined;
-    events: Event[] | undefined;
-    sortBy: string | undefined;
-    sortDirection: string | undefined;
+interface GetSportDiscipline {
+    name?: string;
+    events?: Event[];
+    sortBy?: string;
+    sortDirection?: string;
     page: number;
     pageSize: number;
 }
 
 export const getFilteredSportDisciplineWithPagination = async (request: GetSportDiscipline) => {
-    const whereClause: any = {};
+    // const whereClause: any = {};
+    //
+    // if (request.name) {
+    //     whereClause.name = request.name;
+    // }
+    //
+    // const direction: any = request.sortBy
+    //     ? {
+    //           [request.sortBy]: request.sortDirection === "asc" ? "asc" : "desc",
+    //       }
+    //     : "asc";
 
-    if (request.name) {
-        whereClause.name = request.name;
-    }
-
-    const direction: any = request.sortBy
-        ? {
-              [request.sortBy]: request.sortDirection === "asc" ? "asc" : "desc",
-          }
-        : "asc";
-
-    const result = await db.sportDiscipline.findMany({
+    return db.sportDiscipline.findMany({
         where: {
             ...(request.name ? { name: request.name } : {}),
         },
@@ -33,11 +35,8 @@ export const getFilteredSportDisciplineWithPagination = async (request: GetSport
             events: true,
         },
     });
-
-    return result;
 };
 
 export const getSportDisciplines = async () => {
-    const result = await db.sportDiscipline.findMany();
-    return result;
+    return db.sportDiscipline.findMany();
 };

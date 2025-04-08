@@ -4,30 +4,25 @@ import { db } from "@/lib/db";
 import { ExtendedEvent } from "@/prisma/types";
 import { Prisma } from "@prisma/client";
 
-export interface GetEvent {
-    sportIds?: string[] | undefined;
-    teamIds?: string[] | undefined;
-    categoriesIds?: string[] | undefined;
-    gender?: { male: boolean; female: boolean } | undefined;
-    name?: string | undefined;
-    cityId?: string | undefined;
-    start?: Date | undefined;
-    end?: Date | undefined;
-    age?: number | undefined;
-    countryIds?: string[] | undefined;
-    cityIds?: string[] | undefined;
-    sortBy?: string | undefined;
-    sortDirection?: string | undefined;
+interface GetEvent {
+    sportIds?: string[];
+    teamIds?: string[];
+    categoriesIds?: string[];
+    gender?: { male: boolean; female: boolean };
+    name?: string;
+    cityId?: string;
+    start?: Date;
+    end?: Date;
+    age?: number;
+    countryIds?: string[];
+    cityIds?: string[];
+    sortBy?: string;
+    sortDirection?: string;
     page: number;
     pageSize: number;
 }
 
-interface EventsWithCount {
-    events: ExtendedEvent[];
-    total: number;
-}
-
-export const getFilteredEventWithPagination = async (request: GetEvent): Promise<EventsWithCount> => {
+export const getFilteredEventWithPagination = async (request: GetEvent) => {
     const whereClause: Prisma.EventWhereInput = {};
 
     if (request.name) {
@@ -207,7 +202,7 @@ export const getUserEventIds = async (userId: string): Promise<bigint[]> => {
 export const getUserEvents = async (userId: string): Promise<ExtendedEvent[]> => {
     const eventIds = await getUserEventIds(userId);
 
-    return await db.event.findMany({
+    return db.event.findMany({
         where: {
             id: { in: eventIds },
         },

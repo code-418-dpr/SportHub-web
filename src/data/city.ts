@@ -3,7 +3,7 @@
 import { db } from "@/lib/db";
 import { City, Country, Event } from "@prisma/client";
 
-export interface GetCities {
+interface GetCities {
     name: string | undefined;
     countryId: string | undefined;
     country: Country | undefined;
@@ -14,24 +14,24 @@ export interface GetCities {
     pageSize: number;
 }
 
-export const getFilteredCitiesWithPagination = async (request: GetCities): Promise<City[]> => {
-    const whereClause: any = {};
+export const getFilteredCitiesWithPagination = async (request: GetCities) => {
+    // const whereClause: any = {};
+    //
+    // if (request.name) {
+    //     whereClause.name = request.name;
+    // }
+    //
+    // if (request.countryId) {
+    //     whereClause.countryId = request.countryId;
+    // }
+    //
+    // const direction: any = request.sortBy
+    //     ? {
+    //           [request.sortBy]: request.sortDirection === "asc" ? "asc" : "desc",
+    //       }
+    //     : "asc";
 
-    if (request.name) {
-        whereClause.name = request.name;
-    }
-
-    if (request.countryId) {
-        whereClause.countryId = request.countryId;
-    }
-
-    const direction: any = request.sortBy
-        ? {
-              [request.sortBy]: request.sortDirection === "asc" ? "asc" : "desc",
-          }
-        : "asc";
-
-    const result = await db.city.findMany({
+    return db.city.findMany({
         where: {
             ...(request.name ? { name: request.name } : {}),
             ...(request.countryId ? { countryId: request.countryId } : {}),
@@ -43,15 +43,12 @@ export const getFilteredCitiesWithPagination = async (request: GetCities): Promi
             country: true,
         },
     });
-
-    return result;
 };
 
 export const getCitiesOfCountries = async (countryIds: string[]): Promise<City[]> => {
-    const result = await db.city.findMany({
+    return db.city.findMany({
         where: {
             countryId: { in: countryIds },
         },
     });
-    return result;
 };
