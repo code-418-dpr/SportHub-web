@@ -150,7 +150,7 @@ export const columns: ColumnDef<ExtendedEvent>[] = [
     },
 ];
 
-interface Props {
+interface EventsTableProps {
     countries: Country[];
     categories: Category[];
     sportDisciplines: SportDiscipline[];
@@ -158,13 +158,7 @@ interface Props {
     userEventIds: bigint[] | null;
 }
 
-export function EventsTable({
-    countries,
-    categories,
-    sportDisciplines,
-    teams,
-    userEventIds,
-}: Props): React.ReactElement {
+export function EventsTable({ countries, categories, sportDisciplines, teams, userEventIds }: EventsTableProps) {
     const [sorting, setSorting] = useState<SortingState>([]);
 
     const [nameFilter, setNameFilter] = useState<string>("");
@@ -244,6 +238,7 @@ export function EventsTable({
     useEffect(() => {
         async function fetchCities(): Promise<void> {
             const selectedCountryIds = Array.from(countryFilter.entries())
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .filter(([_, isSelected]) => isSelected)
                 .map(([countryName]) => countries.find((c) => c.name === countryName)?.id)
                 .filter((id): id is string => id !== undefined);
@@ -257,7 +252,7 @@ export function EventsTable({
                 setCityFilter(new Map());
             }
         }
-        fetchCities();
+        void fetchCities();
     }, [countries, countryFilter]);
 
     useEffect(() => {
@@ -295,17 +290,20 @@ export function EventsTable({
             setRowCount(rowCount);
         };
 
-        fetchEvents(
+        void fetchEvents(
             nameFilter,
             Array.from(sportFilter.entries())
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .filter(([_, isSelected]) => isSelected)
                 .map(([sportName]) => sportDisciplines.find((s) => s.name === sportName)?.id)
                 .filter((id): id is string => id !== undefined),
             Array.from(teamFilter.entries())
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .filter(([_, isSelected]) => isSelected)
                 .map(([teamName]) => teams.find((t) => t.name === teamName)?.id)
                 .filter((id): id is string => id !== undefined),
             Array.from(categoryFilter.entries())
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .filter(([_, isSelected]) => isSelected)
                 .map(([categoryName]) => categories.find((c) => c.name === categoryName)?.id)
                 .filter((id): id is string => id !== undefined),
@@ -315,10 +313,12 @@ export function EventsTable({
             },
             age,
             Array.from(countryFilter.entries())
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .filter(([_, isSelected]) => isSelected)
                 .map(([countryName]) => countries.find((c) => c.name === countryName)?.id)
                 .filter((id): id is string => id !== undefined),
             Array.from(cityFilter.entries())
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .filter(([_, isSelected]) => isSelected)
                 .map(([cityName]) => cities.find((c) => c.name === cityName)?.id)
                 .filter((id): id is string => id !== undefined),

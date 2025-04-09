@@ -33,27 +33,31 @@ export function PersonalSettingsForm() {
     });
 
     const onSubmit = (values: z.infer<typeof PersonalSettingsSchema>) => {
-        startTransition(() => {
-            setPersonalSettings(values)
-                .then((data) => {
-                    if (data.error) {
-                        setError(data.error);
-                    }
+        startTransition(async () => {
+            try {
+                const data = await setPersonalSettings(values);
+                if (data.error) {
+                    setError(data.error);
+                }
 
-                    if (data.success) {
-                        update();
-                        setSuccess(data.success);
-                    }
-                })
-                .catch(() => {
-                    setError("Something went wrong!");
-                });
+                if (data.success) {
+                    await update();
+                    setSuccess(data.success);
+                }
+            } catch {
+                setError("Something went wrong!");
+            }
         });
     };
 
     return (
         <Form {...form}>
-            <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+            <form
+                className="space-y-6"
+                onSubmit={() => {
+                    void form.handleSubmit(onSubmit);
+                }}
+            >
                 <div className="space-y-4">
                     <FormField
                         control={form.control}

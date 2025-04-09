@@ -30,29 +30,33 @@ export function PasswordSettingsForm() {
     });
 
     const onSubmit = (values: z.infer<typeof PasswordSettingsSchema>) => {
-        startTransition(() => {
-            setPasswordSettings(values)
-                .then((data) => {
-                    if (data.error) {
-                        setError(data.error);
-                    }
+        startTransition(async () => {
+            try {
+                const data = await setPasswordSettings(values);
+                if (data.error) {
+                    setError(data.error);
+                }
 
-                    if (data.success) {
-                        update();
-                        setSuccess(data.success);
-                    }
+                if (data.success) {
+                    await update();
+                    setSuccess(data.success);
+                }
 
-                    form.reset();
-                })
-                .catch(() => {
-                    setError("Something went wrong!");
-                });
+                form.reset();
+            } catch {
+                setError("Something went wrong!");
+            }
         });
     };
 
     return (
         <Form {...form}>
-            <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+            <form
+                className="space-y-6"
+                onSubmit={() => {
+                    void form.handleSubmit(onSubmit);
+                }}
+            >
                 <div className="space-y-4">
                     <FormField
                         control={form.control}

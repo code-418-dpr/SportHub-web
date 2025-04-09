@@ -21,7 +21,7 @@ export function Recommendations({ userId }: Props) {
     }, [userId]);
 
     useEffect(() => {
-        fetchRecommendations();
+        void fetchRecommendations();
     }, [fetchRecommendations]);
 
     return (
@@ -34,7 +34,12 @@ export function Recommendations({ userId }: Props) {
                     ))}
                 </div>
                 <div className="flex justify-center">
-                    <Button onClick={fetchRecommendations} className="px-8 py-6 text-lg">
+                    <Button
+                        onClick={() => {
+                            void fetchRecommendations();
+                        }}
+                        className="px-8 py-6 text-lg"
+                    >
                         Показать другие события
                     </Button>
                 </div>
