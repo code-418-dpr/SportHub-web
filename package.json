@@ -12,7 +12,8 @@
         "add-component": "bun run --bun shadcn add",
         "prepare": "bun run --bun husky",
         "postinstall": "bun run prisma generate",
-        "db:push": "bun run prisma db push"
+        "db:push": "bun run prisma db push",
+        "db:studio": "bun run prisma studio"
     },
     "prisma": {
         "schema": "./src/prisma/schema.prisma"
