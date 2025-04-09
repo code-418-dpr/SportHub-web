@@ -2,56 +2,40 @@
 
 import z from "zod";
 
-import { useState } from "react";
+import React, { startTransition, useActionState } from "react";
 import { useForm } from "react-hook-form";
 
-import { useSearchParams } from "next/navigation";
-
-import { login } from "@/actions/login";
 import { register } from "@/actions/register";
 import { FormFeedback } from "@/components/shared/form-feedback";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { RegisterSchema } from "@/schemas";
+import { LoginAndRegisterSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 export const RegisterForm = () => {
-    const [error, setError] = useState<string | undefined>("");
-    const [success, setSuccess] = useState<string | undefined>("");
-    const [isPending, setIsPending] = useState(false);
+    const [errorMessage, formAction, isPending] = useActionState(register, undefined);
 
-    const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get("callbackUrl");
-
-    const form = useForm<z.infer<typeof RegisterSchema>>({
-        resolver: zodResolver(RegisterSchema),
-        defaultValues: {
-            email: "",
-            password: "",
-        },
+    const form = useForm<z.infer<typeof LoginAndRegisterSchema>>({
+        resolver: zodResolver(LoginAndRegisterSchema),
     });
 
-    const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
-        setError("");
-        setSuccess("");
+    const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+        event.preventDefault();
+        void form.handleSubmit((data) => {
+            const formData = new FormData();
+            formData.append("email", data.email);
+            formData.append("password", data.password);
 
-        setIsPending(true);
-        register(values).then((data) => {
-            if (data.error) {
-                setError(data.error);
-                form.reset();
-                setIsPending(false);
-            } else {
-                setSuccess(data.success);
-                login(values, callbackUrl);
-            }
-        });
+            startTransition(() => {
+                formAction(formData);
+            });
+        })(event);
     };
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={onSubmit} className="space-y-6">
                 <div className="space-y-4">
                     <FormField
                         control={form.control}
@@ -60,12 +44,7 @@ export const RegisterForm = () => {
                             <FormItem>
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
-                                    <Input
-                                        {...field}
-                                        disabled={isPending}
-                                        placeholder="john.doe@example.com"
-                                        type="email"
-                                    />
+                                    <Input {...field} disabled={isPending} placeholder="john.doe@example.com" />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -85,7 +64,7 @@ export const RegisterForm = () => {
                         )}
                     />
                 </div>
-                <FormFeedback errorMessage={error} successMessage={success} />
+                <FormFeedback errorMessage={errorMessage} />
                 <Button disabled={isPending} type="submit" className="w-full">
                     Создать аккаунт
                 </Button>

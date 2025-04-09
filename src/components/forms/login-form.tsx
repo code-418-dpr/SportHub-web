@@ -2,56 +2,40 @@
 
 import z from "zod";
 
-import { useState, useTransition } from "react";
+import React, { startTransition, useActionState } from "react";
 import { useForm } from "react-hook-form";
-
-import { useSearchParams } from "next/navigation";
 
 import { login } from "@/actions/login";
 import { FormFeedback } from "@/components/shared/form-feedback";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { LoginSchema } from "@/schemas";
+import { LoginAndRegisterSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 export const LoginForm = () => {
-    const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get("callbackUrl");
+    const [errorMessage, formAction, isPending] = useActionState(login, undefined);
 
-    const [error, setError] = useState<string | undefined>("");
-    const [success, setSuccess] = useState<string | undefined>("");
-    const [isPending, startTransition] = useTransition();
-
-    const form = useForm<z.infer<typeof LoginSchema>>({
-        resolver: zodResolver(LoginSchema),
-        defaultValues: {
-            email: "",
-            password: "",
-        },
+    const form = useForm<z.infer<typeof LoginAndRegisterSchema>>({
+        resolver: zodResolver(LoginAndRegisterSchema),
     });
 
-    const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-        setError("");
-        setSuccess("");
+    const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+        event.preventDefault();
+        void form.handleSubmit((data) => {
+            const formData = new FormData();
+            formData.append("email", data.email);
+            formData.append("password", data.password);
 
-        startTransition(() => {
-            login(values, callbackUrl)
-                .then((data) => {
-                    if (data?.error) {
-                        form.reset();
-                        setError(data.error);
-                    }
-                })
-                .catch(() => {
-                    setError("Something went wrong");
-                });
-        });
+            startTransition(() => {
+                formAction(formData);
+            });
+        })(event);
     };
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={onSubmit} className="space-y-6">
                 <div className="space-y-4">
                     <FormField
                         control={form.control}
@@ -60,12 +44,7 @@ export const LoginForm = () => {
                             <FormItem>
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
-                                    <Input
-                                        {...field}
-                                        disabled={isPending}
-                                        placeholder="john.doe@example.com"
-                                        type="email"
-                                    />
+                                    <Input {...field} disabled={isPending} placeholder="john.doe@example.com" />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -85,7 +64,7 @@ export const LoginForm = () => {
                         )}
                     />
                 </div>
-                <FormFeedback errorMessage={error} successMessage={success} />
+                <FormFeedback errorMessage={errorMessage} />
                 <Button disabled={isPending} type="submit" className="w-full">
                     Войти
                 </Button>

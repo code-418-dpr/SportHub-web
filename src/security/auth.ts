@@ -1,23 +1,50 @@
-import NextAuth from "next-auth";
+import bcrypt from "bcryptjs";
 
-import { getAccountByUserId } from "@/data/account";
-import { getUserById } from "@/data/user";
+import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import Yandex from "next-auth/providers/yandex";
+
+import { getUserByEmail } from "@/data/user";
 import { db } from "@/lib/db";
+import { LoginAndRegisterSchema } from "@/schemas";
 import authConfig from "@/security/auth.config";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { UserRole } from "@prisma/client";
 
 export const {
-    handlers: { GET, POST },
+    handlers,
     auth,
     signIn,
     signOut,
     unstable_update: update,
 } = NextAuth({
-    pages: {
-        signIn: "/login",
-        error: "/auth-error",
-    },
+    ...authConfig,
+    providers: [
+        Yandex,
+        Credentials({
+            credentials: {
+                email: {},
+                password: {},
+            },
+            async authorize(credentials) {
+                const validatedFields = await LoginAndRegisterSchema.safeParseAsync(credentials);
+                if (!validatedFields.success) {
+                    return null;
+                }
+
+                const { email, password } = validatedFields.data;
+                const user = await getUserByEmail(email);
+                if (!user?.password) {
+                    return null;
+                }
+
+                const passwordsMatch = await bcrypt.compare(password, user.password);
+                if (passwordsMatch) {
+                    return user;
+                }
+                return null;
+            },
+        }),
+    ],
     events: {
         async linkAccount({ user }) {
             await db.user.update({
@@ -26,46 +53,6 @@ export const {
             });
         },
     },
-    callbacks: {
-        async session({ token, session }) {
-            if (token.sub && session.user) {
-                session.user.id = token.sub;
-            }
-
-            if (token.role && session.user) {
-                session.user.role = token.role as UserRole;
-            }
-
-            if (session.user) {
-                session.user.name = token.name;
-                session.user.email = token.email!;
-                session.user.isOAuth = token.isOAuth as boolean;
-            }
-
-            return session;
-        },
-        async jwt({ token }) {
-            if (!token.sub) {
-                return token;
-            }
-
-            const existingUser = await getUserById(token.sub);
-
-            if (!existingUser) {
-                return token;
-            }
-
-            const existingAccount = await getAccountByUserId(existingUser.id);
-
-            token.isOAuth = !!existingAccount;
-            token.name = existingUser.name;
-            token.email = existingUser.email;
-            token.role = existingUser.role;
-
-            return token;
-        },
-    },
     adapter: PrismaAdapter(db),
     session: { strategy: "jwt" },
-    ...authConfig,
 });

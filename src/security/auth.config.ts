@@ -1,39 +1,61 @@
-import bcrypt from "bcryptjs";
-
 import type { NextAuthConfig } from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-import Yandex from "next-auth/providers/yandex";
 
-import { getUserByEmail } from "@/data/user";
-import { LoginSchema } from "@/schemas";
+import { getAccountByUserId } from "@/data/account";
+import { getUserById } from "@/data/user";
+import { AUTH_ROUTES, DEFAULT_LOGIN_REDIRECT, PROTECTED_ROUTES } from "@/security/routes";
+import { UserRole } from "@prisma/client";
 
 export default {
-    providers: [
-        Yandex({
-            clientId: process.env.YANDEX_CLIENT_ID,
-            clientSecret: process.env.YANDEX_CLIENT_SECRET,
-        }),
-        Credentials({
-            async authorize(credentials) {
-                const validatedFields = LoginSchema.safeParse(credentials);
+    pages: {
+        signIn: "/login",
+        error: "/auth-error",
+    },
+    callbacks: {
+        authorized({ auth, request: { nextUrl } }) {
+            const isLoggedIn = !!auth?.user;
+            const isOnProtectedRoute = PROTECTED_ROUTES.some((route) => nextUrl.pathname.startsWith(route));
+            if (isOnProtectedRoute) {
+                return isLoggedIn;
+            } else if (isLoggedIn && AUTH_ROUTES.some((path) => nextUrl.pathname.startsWith(path))) {
+                return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+            }
+            return true;
+        },
 
-                if (validatedFields.success) {
-                    const { email, password } = validatedFields.data;
+        session({ token, session }) {
+            if (token.sub) {
+                session.user.id = token.sub;
+            }
+            if (token.role) {
+                session.user.role = token.role as UserRole;
+            }
 
-                    const user = await getUserByEmail(email);
-                    if (!user?.password) {
-                        return null;
-                    }
+            session.user.name = token.name;
+            session.user.email = token.email!;
+            session.user.isOAuth = !!token.isOAuth;
 
-                    const passwordsMatch = await bcrypt.compare(password, user.password);
+            return session;
+        },
 
-                    if (passwordsMatch) {
-                        return user;
-                    }
-                }
+        async jwt({ token }) {
+            if (!token.sub) {
+                return token;
+            }
 
-                return null;
-            },
-        }),
-    ],
+            const existingUser = await getUserById(token.sub);
+            if (!existingUser) {
+                return token;
+            }
+
+            const existingAccount = await getAccountByUserId(existingUser.id);
+
+            token.isOAuth = !!existingAccount;
+            token.name = existingUser.name;
+            token.email = existingUser.email;
+            token.role = existingUser.role;
+
+            return token;
+        },
+    },
+    providers: [],
 } satisfies NextAuthConfig;
