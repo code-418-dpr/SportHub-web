@@ -118,7 +118,7 @@ export async function POST(request: Request) {
                     });
 
                     //Отправляем уведомления
-                    await SendNotification();
+                    // await SendNotification();
                 } else {
                     await db.event.update({
                         where: { id },
@@ -184,12 +184,12 @@ async function SoftDelete(event: JsonEvent) {
         if (changedFields.length > 0) {
             await db.event.update({ where: { id: isEventExist.id }, data: { isDeleted: true } });
         }
-        await SendNotification();
+        // await SendNotification();
 
         return true;
     }
 
-    await SendNotification();
+    // await SendNotification();
 
     return false;
 }

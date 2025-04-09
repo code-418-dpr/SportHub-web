@@ -41,7 +41,7 @@ export const setPersonalSettings = async (values: z.infer<typeof PersonalSetting
         },
     });
 
-    update({
+    await update({
         user: {
             name: updatedUser.name,
             email: updatedUser.email,
@@ -71,8 +71,7 @@ export const setPasswordSettings = async (values: z.infer<typeof PasswordSetting
             return { error: "Неверный пароль!" };
         }
 
-        const hashedPassword = await bcrypt.hash(values.newPassword, 10);
-        values.currentPassword = hashedPassword;
+        values.currentPassword = await bcrypt.hash(values.newPassword, 10);
     }
 
     await db.user.update({

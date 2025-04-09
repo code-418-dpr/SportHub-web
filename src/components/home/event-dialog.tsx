@@ -100,13 +100,21 @@ export function EventDialog({ isOpen, setIsOpen, event, userEventIds }: Props): 
                             (participating ? (
                                 <Button
                                     variant="default"
-                                    onClick={handleCancelParticipation}
+                                    onClick={() => {
+                                        void handleCancelParticipation();
+                                    }}
                                     className="w-full py-6 text-lg"
                                 >
                                     Отменить участие
                                 </Button>
                             ) : (
-                                <Button variant="outline" onClick={handleParticipate} className="w-full py-6 text-lg">
+                                <Button
+                                    variant="outline"
+                                    onClick={() => {
+                                        void handleParticipate();
+                                    }}
+                                    className="w-full py-6 text-lg"
+                                >
                                     Участвую!
                                 </Button>
                             ))}

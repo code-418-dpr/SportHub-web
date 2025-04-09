@@ -3,21 +3,10 @@
 import React from "react";
 
 import { signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import { DEFAULT_LOGIN_REDIRECT } from "@/security/routes";
 
-export const OauthButtons = (): React.ReactNode => {
-    const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get("callbackUrl");
-
-    const onClick = (provider: "yandex") => {
-        void signIn(provider, {
-            callbackUrl: callbackUrl ?? DEFAULT_LOGIN_REDIRECT,
-        });
-    };
-
+export const OAuthButtons = () => {
     return (
         <div className="space-y-4">
             <div className="relative">
@@ -34,7 +23,7 @@ export const OauthButtons = (): React.ReactNode => {
                     className="w-full"
                     variant="outline"
                     onClick={() => {
-                        onClick("yandex");
+                        void signIn("yandex");
                     }}
                 >
                     Яндекс

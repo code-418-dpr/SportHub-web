@@ -19,7 +19,7 @@ import {
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
 
-export const UserButton = (): React.ReactNode => {
+export const UserButton = () => {
     const user = useCurrentUser();
     const pathname = usePathname();
 
