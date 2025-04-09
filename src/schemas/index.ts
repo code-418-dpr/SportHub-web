@@ -2,48 +2,21 @@ import z from "zod";
 
 export const PersonalSettingsSchema = z.object({
     name: z.optional(z.string()),
-    email: z.optional(z.string().email()),
+    email: z.optional(z.string().email("Неверный формат email")),
 });
 
-export const PasswordSettingsSchema = z
-    .object({
-        currentPassword: z.optional(z.string().min(6)),
-        newPassword: z.optional(z.string().min(6)),
-    })
-    .refine(
-        (data) => {
-            return !(data.currentPassword && !data.newPassword);
-        },
-        {
-            message: "New password is required!",
-            path: ["newPassword"],
-        },
-    )
-    .refine(
-        (data) => {
-            return !(data.newPassword && !data.currentPassword);
-        },
-        {
-            message: "Password is required!",
-            path: ["currentPassword"],
-        },
-    );
-
-export const LoginSchema = z.object({
-    email: z.string().email({
-        message: "Email is required ",
-    }),
-    password: z.string().min(1, {
-        message: "Password is required",
-    }),
-    code: z.optional(z.string()),
+export const PasswordSettingsSchema = z.object({
+    currentPassword: z
+        .string({ required_error: "Для смены пароля введите старый пароль" })
+        .min(6, "Пароль должен состоять из не менее 6 символов"),
+    newPassword: z
+        .string({ required_error: "Для смены пароля введите новый пароль" })
+        .min(6, "Пароль должен состоять из не менее 6 символов"),
 });
 
-export const RegisterSchema = z.object({
-    email: z.string().email({
-        message: "Email is required",
-    }),
-    password: z.string().min(6, {
-        message: "Minimum 6 characters required",
-    }),
+export const LoginAndRegisterSchema = z.object({
+    email: z.string({ required_error: "Email обязателен для входа" }).email("Неверный формат email"),
+    password: z
+        .string({ required_error: "Пароль обязателен для входа" })
+        .min(6, "Пароль должен состоять из не менее 6 символов"),
 });
