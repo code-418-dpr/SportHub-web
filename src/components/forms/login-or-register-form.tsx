@@ -5,6 +5,7 @@ import z from "zod";
 import React, { startTransition, useActionState } from "react";
 import { useForm } from "react-hook-form";
 
+import { login } from "@/actions/login";
 import { register } from "@/actions/register";
 import { FormFeedback } from "@/components/shared/form-feedback";
 import { Button } from "@/components/ui/button";
@@ -13,8 +14,9 @@ import { Input } from "@/components/ui/input";
 import { LoginAndRegisterSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-export const RegisterForm = () => {
-    const [errorMessage, formAction, isPending] = useActionState(register, undefined);
+export const LoginOrRegisterForm = ({ mode }: { mode?: "login" | "register" }) => {
+    mode ??= "login";
+    const [errorMessage, formAction, isPending] = useActionState(mode === "login" ? login : register, undefined);
 
     const form = useForm<z.infer<typeof LoginAndRegisterSchema>>({
         resolver: zodResolver(LoginAndRegisterSchema),
@@ -71,7 +73,7 @@ export const RegisterForm = () => {
                                         disabled={isPending}
                                         placeholder="******"
                                         type="password"
-                                        autoComplete="password"
+                                        autoComplete="current-password"
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -81,7 +83,7 @@ export const RegisterForm = () => {
                 </div>
                 <FormFeedback errorMessage={errorMessage} />
                 <Button disabled={isPending} type="submit" className="w-full">
-                    Создать аккаунт
+                    {mode === "login" ? "Войти" : "Создать аккаунт"}
                 </Button>
             </form>
         </Form>

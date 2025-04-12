@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { OAuthButtons } from "@/components/auth/oauth-buttons";
-import { LoginForm } from "@/components/forms/login-form";
+import { LoginOrRegisterForm } from "@/components/forms/login-or-register-form";
 import { Button } from "@/components/ui/button";
 
 export default async function LoginPage(props: {
@@ -17,7 +17,7 @@ export default async function LoginPage(props: {
     return (
         <div className="w-[min(calc(100%-2rem),400px)] space-y-4">
             <h1 className="pb-4 text-center text-3xl font-semibold">Добро пожаловать</h1>
-            <LoginForm />
+            <LoginOrRegisterForm />
             <OAuthButtons />
             <Button variant="link" className="w-full font-normal" size="sm" asChild>
                 <Link href={registerUrl}>Ещё нет аккаунта?</Link>
