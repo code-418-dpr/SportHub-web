@@ -8,7 +8,6 @@ import { getUserByEmail } from "@/data/user";
 import { LoginAndRegisterSchema } from "@/schemas";
 import authConfig from "@/security/auth.config";
 
-// Проверка на сервер и Node.js (не Edge)
 const isServer = typeof window === "undefined" && process.env.NODE_ENV !== "development";
 
 export const {
@@ -28,7 +27,9 @@ export const {
             },
             async authorize(credentials) {
                 const validatedFields = await LoginAndRegisterSchema.safeParseAsync(credentials);
-                if (!validatedFields.success) return null;
+                if (!validatedFields.success) {
+                    return null;
+                }
 
                 const { email, password } = validatedFields.data;
                 const user = await getUserByEmail(email);
@@ -43,7 +44,9 @@ export const {
     session: { strategy: "jwt" },
     events: {
         async linkAccount({ user }) {
-            if (!isServer) return;
+            if (!isServer) {
+                return;
+            }
             const { db } = await import("@/lib/db");
             await db.user.update({
                 where: { id: user.id },

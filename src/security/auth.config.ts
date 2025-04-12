@@ -5,7 +5,6 @@ import { getUserById } from "@/data/user";
 import { AUTH_ROUTES, DEFAULT_LOGIN_REDIRECT, PROTECTED_ROUTES } from "@/security/routes";
 import { UserRole } from "@prisma/client";
 
-// Проверка на Edge Runtime
 const isEdgeRuntime = typeof process !== "undefined" && process.env.NEXT_RUNTIME === "edge";
 
 export default {
@@ -18,7 +17,9 @@ export default {
             const isLoggedIn = !!auth?.user;
             const isOnProtectedRoute = PROTECTED_ROUTES.some((route) => nextUrl.pathname.startsWith(route));
 
-            if (isOnProtectedRoute) return isLoggedIn;
+            if (isOnProtectedRoute) {
+                return isLoggedIn;
+            }
             if (isLoggedIn && AUTH_ROUTES.some((path) => nextUrl.pathname.startsWith(path))) {
                 return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
             }
@@ -26,8 +27,12 @@ export default {
         },
 
         session({ token, session }) {
-            if (token.sub) session.user.id = token.sub;
-            if (token.role) session.user.role = token.role as UserRole;
+            if (token.sub) {
+                session.user.id = token.sub;
+            }
+            if (token.role) {
+                session.user.role = token.role as UserRole;
+            }
 
             session.user.name = token.name;
             session.user.email = token.email!;
@@ -37,11 +42,15 @@ export default {
         },
 
         async jwt({ token }) {
-            if (!token.sub || isEdgeRuntime) return token;
+            if (!token.sub || isEdgeRuntime) {
+                return token;
+            }
 
             try {
                 const existingUser = await getUserById(token.sub);
-                if (!existingUser) return token;
+                if (!existingUser) {
+                    return token;
+                }
 
                 const existingAccount = await getAccountByUserId(existingUser.id);
 
@@ -53,7 +62,7 @@ export default {
                     isOAuth: !!existingAccount,
                 };
             } catch (error) {
-                console.error("JWT callback error:", error);
+                console.error("Ошибка JWT-коллбэка:", error);
                 return token;
             }
         },
