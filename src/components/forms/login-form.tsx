@@ -18,6 +18,10 @@ export const LoginForm = () => {
 
     const form = useForm<z.infer<typeof LoginAndRegisterSchema>>({
         resolver: zodResolver(LoginAndRegisterSchema),
+        defaultValues: {
+            email: "",
+            password: "",
+        },
     });
 
     const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
@@ -44,7 +48,13 @@ export const LoginForm = () => {
                             <FormItem>
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
-                                    <Input {...field} disabled={isPending} placeholder="john.doe@example.com" />
+                                    <Input
+                                        {...field}
+                                        disabled={isPending}
+                                        placeholder="john.doe@example.com"
+                                        type="email"
+                                        autoComplete="username"
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -57,7 +67,13 @@ export const LoginForm = () => {
                             <FormItem>
                                 <FormLabel>Пароль</FormLabel>
                                 <FormControl>
-                                    <Input {...field} disabled={isPending} placeholder="******" type="password" />
+                                    <Input
+                                        {...field}
+                                        disabled={isPending}
+                                        placeholder="******"
+                                        type="password"
+                                        autoComplete="current-password"
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

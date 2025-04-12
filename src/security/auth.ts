@@ -5,10 +5,11 @@ import Credentials from "next-auth/providers/credentials";
 import Yandex from "next-auth/providers/yandex";
 
 import { getUserByEmail } from "@/data/user";
-import { db } from "@/lib/db";
 import { LoginAndRegisterSchema } from "@/schemas";
 import authConfig from "@/security/auth.config";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+
+// Проверка на сервер и Node.js (не Edge)
+const isServer = typeof window === "undefined" && process.env.NODE_ENV !== "development";
 
 export const {
     handlers,
@@ -27,32 +28,27 @@ export const {
             },
             async authorize(credentials) {
                 const validatedFields = await LoginAndRegisterSchema.safeParseAsync(credentials);
-                if (!validatedFields.success) {
-                    return null;
-                }
+                if (!validatedFields.success) return null;
 
                 const { email, password } = validatedFields.data;
                 const user = await getUserByEmail(email);
-                if (!user?.password) {
-                    return null;
-                }
+                if (!user?.password) return null;
 
                 const passwordsMatch = await bcrypt.compare(password, user.password);
-                if (passwordsMatch) {
-                    return user;
-                }
-                return null;
+                return passwordsMatch ? user : null;
             },
         }),
     ],
+    adapter: isServer ? (await import("@auth/prisma-adapter")).PrismaAdapter((await import("@/lib/db")).db) : undefined,
+    session: { strategy: "jwt" },
     events: {
         async linkAccount({ user }) {
+            if (!isServer) return;
+            const { db } = await import("@/lib/db");
             await db.user.update({
                 where: { id: user.id },
                 data: { emailVerified: new Date() },
             });
         },
     },
-    adapter: PrismaAdapter(db),
-    session: { strategy: "jwt" },
 });

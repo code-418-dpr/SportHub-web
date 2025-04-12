@@ -18,6 +18,10 @@ export const RegisterForm = () => {
 
     const form = useForm<z.infer<typeof LoginAndRegisterSchema>>({
         resolver: zodResolver(LoginAndRegisterSchema),
+        defaultValues: {
+            email: "",
+            password: "",
+        },
     });
 
     const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
@@ -44,7 +48,12 @@ export const RegisterForm = () => {
                             <FormItem>
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
-                                    <Input {...field} disabled={isPending} placeholder="john.doe@example.com" />
+                                    <Input
+                                        {...field}
+                                        disabled={isPending}
+                                        placeholder="john.doe@example.com"
+                                        type="email"
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
