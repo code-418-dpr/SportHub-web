@@ -2,7 +2,7 @@
 
 import z from "zod";
 
-import { useState, useTransition } from "react";
+import React, { startTransition, useActionState } from "react";
 import { useForm } from "react-hook-form";
 
 import { useSession } from "next-auth/react";
@@ -16,10 +16,8 @@ import { PasswordSettingsSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 export function PasswordSettingsForm() {
+    const [errorMessage, formAction, isPending] = useActionState(setPasswordSettings, undefined);
     const { update } = useSession();
-    const [isPending, startTransition] = useTransition();
-    const [error, setError] = useState<string | undefined>();
-    const [success, setSuccess] = useState<string | undefined>();
 
     const form = useForm<z.infer<typeof PasswordSettingsSchema>>({
         resolver: zodResolver(PasswordSettingsSchema),
@@ -29,34 +27,24 @@ export function PasswordSettingsForm() {
         },
     });
 
-    const onSubmit = (values: z.infer<typeof PasswordSettingsSchema>) => {
-        startTransition(async () => {
-            try {
-                const data = await setPasswordSettings(values);
-                if (data.error) {
-                    setError(data.error);
-                }
+    const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+        event.preventDefault();
+        void form.handleSubmit((data) => {
+            const formData = new FormData();
+            formData.append("currentPassword", data.currentPassword);
+            formData.append("newPassword", data.newPassword);
 
-                if (data.success) {
-                    await update();
-                    setSuccess(data.success);
-                }
-
+            startTransition(async () => {
+                formAction(formData);
+                await update();
                 form.reset();
-            } catch {
-                setError("Something went wrong!");
-            }
-        });
+            });
+        })(event);
     };
 
     return (
         <Form {...form}>
-            <form
-                className="space-y-6"
-                onSubmit={() => {
-                    void form.handleSubmit(onSubmit);
-                }}
-            >
+            <form className="space-y-6" onSubmit={onSubmit}>
                 <div className="space-y-4">
                     <FormField
                         control={form.control}
@@ -85,7 +73,7 @@ export function PasswordSettingsForm() {
                         )}
                     />
                 </div>
-                <FormFeedback errorMessage={error} successMessage={success} />
+                <FormFeedback errorMessage={errorMessage} />
                 <Button disabled={isPending} type="submit">
                     Сохранить
                 </Button>

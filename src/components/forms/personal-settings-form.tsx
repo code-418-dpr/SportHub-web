@@ -2,7 +2,7 @@
 
 import z from "zod";
 
-import { useState, useTransition } from "react";
+import React, { startTransition, useActionState } from "react";
 import { useForm } from "react-hook-form";
 
 import { useSession } from "next-auth/react";
@@ -17,47 +17,39 @@ import { PersonalSettingsSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 export function PersonalSettingsForm() {
-    const user = useCurrentUser();
-
-    const [error, setError] = useState<string | undefined>();
-    const [success, setSuccess] = useState<string | undefined>();
+    const [errorMessage, formAction, isPending] = useActionState(setPersonalSettings, undefined);
     const { update } = useSession();
-    const [isPending, startTransition] = useTransition();
+    const user = useCurrentUser();
 
     const form = useForm<z.infer<typeof PersonalSettingsSchema>>({
         resolver: zodResolver(PersonalSettingsSchema),
         defaultValues: {
-            name: user?.name ?? undefined,
-            email: user?.email ?? undefined,
+            name: user?.name ?? "",
+            email: user?.email ?? "",
         },
     });
 
-    const onSubmit = (values: z.infer<typeof PersonalSettingsSchema>) => {
-        startTransition(async () => {
-            try {
-                const data = await setPersonalSettings(values);
-                if (data.error) {
-                    setError(data.error);
-                }
-
-                if (data.success) {
-                    await update();
-                    setSuccess(data.success);
-                }
-            } catch {
-                setError("Something went wrong!");
+    const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+        event.preventDefault();
+        void form.handleSubmit((data) => {
+            const formData = new FormData();
+            if (data.name) {
+                formData.append("name", data.name);
             }
-        });
+            if (data.email) {
+                formData.append("email", data.email);
+            }
+
+            startTransition(async () => {
+                formAction(formData);
+                await update();
+            });
+        })(event);
     };
 
     return (
         <Form {...form}>
-            <form
-                className="space-y-6"
-                onSubmit={() => {
-                    void form.handleSubmit(onSubmit);
-                }}
-            >
+            <form className="space-y-6" onSubmit={onSubmit}>
                 <div className="space-y-4">
                     <FormField
                         control={form.control}
@@ -95,7 +87,7 @@ export function PersonalSettingsForm() {
                         </>
                     )}
                 </div>
-                <FormFeedback errorMessage={error} successMessage={success} />
+                <FormFeedback errorMessage={errorMessage} />
                 <Button disabled={isPending} type="submit">
                     Сохранить
                 </Button>

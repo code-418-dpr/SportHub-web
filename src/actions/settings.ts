@@ -1,7 +1,6 @@
 "use server";
 
 import bcrypt from "bcryptjs";
-import z from "zod";
 
 import { getUserByEmail, getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
@@ -9,17 +8,25 @@ import { db } from "@/lib/db";
 import { PasswordSettingsSchema, PersonalSettingsSchema } from "@/schemas";
 import { update } from "@/security/auth";
 
-export const setPersonalSettings = async (values: z.infer<typeof PersonalSettingsSchema>) => {
-    const user = await currentUser();
+export async function setPersonalSettings(_: string | undefined, formData: FormData) {
+    const validatedFields = await PersonalSettingsSchema.safeParseAsync({
+        name: formData.get("name"),
+        email: formData.get("email"),
+    });
+    if (!validatedFields.success) {
+        return "Ошибка валидации полей";
+    }
 
+    const values = validatedFields.data;
+
+    const user = await currentUser();
     if (!user) {
-        return { error: "Unauthorized" };
+        return "Ошибка сессии";
     }
 
     const dbUser = await getUserById(user.id!);
-
     if (!dbUser) {
-        return { error: "Unauthorized" };
+        return "Пользователь не существует";
     }
 
     if (user.isOAuth) {
@@ -30,7 +37,7 @@ export const setPersonalSettings = async (values: z.infer<typeof PersonalSetting
         const existingUser = await getUserByEmail(values.email);
 
         if (existingUser && existingUser.id !== user.id) {
-            return { error: "Email уже используется!" };
+            return "Email уже используется";
         }
     }
 
@@ -47,28 +54,32 @@ export const setPersonalSettings = async (values: z.infer<typeof PersonalSetting
             email: updatedUser.email,
         },
     });
+}
 
-    return { success: "Настройки успешно обновлены!" };
-};
+export async function setPasswordSettings(_: string | undefined, formData: FormData) {
+    const validatedFields = await PasswordSettingsSchema.safeParseAsync({
+        currentPassword: formData.get("currentPassword"),
+        newPassword: formData.get("newPassword"),
+    });
+    if (!validatedFields.success) {
+        return "Ошибка валидации полей";
+    }
+    const values = validatedFields.data;
 
-export const setPasswordSettings = async (values: z.infer<typeof PasswordSettingsSchema>) => {
     const user = await currentUser();
-
     if (!user) {
-        return { error: "Unauthorized" };
+        return "Ошибка сессии";
     }
 
     const dbUser = await getUserById(user.id!);
-
     if (!dbUser) {
-        return { error: "Unauthorized" };
+        return "Пользователь не существует";
     }
 
     if (values.currentPassword && values.newPassword && dbUser.password) {
         const passwordsMatch = await bcrypt.compare(values.currentPassword, dbUser.password);
-
         if (!passwordsMatch) {
-            return { error: "Неверный пароль!" };
+            return "Неверный пароль!";
         }
 
         values.currentPassword = await bcrypt.hash(values.newPassword, 10);
@@ -80,6 +91,4 @@ export const setPasswordSettings = async (values: z.infer<typeof PasswordSetting
             password: values.currentPassword,
         },
     });
-
-    return { success: "Пароль успешно изменен!" };
-};
+}
