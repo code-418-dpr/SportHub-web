@@ -5,10 +5,10 @@ import Credentials from "next-auth/providers/credentials";
 import Yandex from "next-auth/providers/yandex";
 
 import { getUserByEmail } from "@/data/user";
+import { db } from "@/lib/db";
 import { LoginAndRegisterSchema } from "@/schemas";
 import authConfig from "@/security/auth.config";
-
-const isServer = typeof window === "undefined" && process.env.NODE_ENV !== "development";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 
 export const {
     handlers,
@@ -40,14 +40,10 @@ export const {
             },
         }),
     ],
-    adapter: isServer ? (await import("@auth/prisma-adapter")).PrismaAdapter((await import("@/lib/db")).db) : undefined,
+    adapter: PrismaAdapter(db),
     session: { strategy: "jwt" },
     events: {
         async linkAccount({ user }) {
-            if (!isServer) {
-                return;
-            }
-            const { db } = await import("@/lib/db");
             await db.user.update({
                 where: { id: user.id },
                 data: { emailVerified: new Date() },
