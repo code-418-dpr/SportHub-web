@@ -9,15 +9,15 @@ import { LoginAndRegisterSchema } from "@/schemas";
 import { signIn } from "@/security/auth";
 
 export async function register(_: string | undefined, formData: FormData) {
-    try {
-        const validatedFields = LoginAndRegisterSchema.safeParse({
-            email: formData.get("email"),
-            password: formData.get("password"),
-        });
-        if (!validatedFields.success) {
-            return "Ошибка валидации полей";
-        }
+    const validatedFields = await LoginAndRegisterSchema.safeParseAsync({
+        email: formData.get("email"),
+        password: formData.get("password"),
+    });
+    if (!validatedFields.success) {
+        return "Ошибка валидации полей";
+    }
 
+    try {
         const { email, password } = validatedFields.data;
         const hashedPassword = await bcrypt.hash(password, 10);
         await db.user.create({
