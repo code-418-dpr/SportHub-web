@@ -9,7 +9,6 @@ import { ThemeProvider } from "@/components/theming/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import siteMetadata from "@/conf/site-metadata";
 import { cn } from "@/lib/utils";
-import { auth } from "@/security/auth";
 
 import "./globals.css";
 
@@ -22,24 +21,22 @@ export const metadata: Metadata = {
     authors: [siteMetadata.authors],
 };
 
-export default async function RootLayout({
+export default function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const session = await auth();
-
     return (
-        <SessionProvider session={session}>
-            <html lang="ru" suppressHydrationWarning>
-                <body className={cn(inter.className, "min-h-screen")}>
+        <html lang="ru" suppressHydrationWarning>
+            <body className={cn(inter.className, "min-h-screen")}>
+                <SessionProvider>
                     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
                         <Toaster />
                         <Navbar />
                         <div className="mt-10">{children}</div>
                     </ThemeProvider>
-                </body>
-            </html>
-        </SessionProvider>
+                </SessionProvider>
+            </body>
+        </html>
     );
 }
