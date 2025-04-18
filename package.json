@@ -36,7 +36,7 @@
         ]
     },
     "dependencies": {
-        "@prisma/client": "^6.5.0",
+        "@prisma/client": "^6.6.0",
         "next": "~15.2.4",
         "react": "~19.1.0",
         "react-dom": "~19.1.0"
@@ -88,7 +88,7 @@
         "react-day-picker": "~8.10.1",
         "react-hook-form": "^7.55.0",
         "react-spinners": "^0.15.0",
-        "shadcn": "^2.4.0-canary.17",
+        "shadcn": "^2.4.1",
         "sonner": "^2.0.3",
         "stylelint": "^16.17.0",
         "stylelint-config-recommended": "^16.0.0",
@@ -100,6 +100,6 @@
         "typescript-eslint": "^8.28.0",
         "uuid": "^10.0.0",
         "vaul": "^1.1.2",
-        "zod": "^3.24.2"
+        "zod": "^3.24.3"
     }
 }
