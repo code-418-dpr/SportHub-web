@@ -2,7 +2,11 @@ import { CheckIcon } from "lucide-react";
 
 import { auth } from "@/security/auth";
 
-export default async function TgAuthPage({ params }: { params: Promise<{ token: string }> }) {
+interface TgAuthPageProps {
+    params: Promise<{ token: string }>;
+}
+
+export default async function TgAuthPage({ params }: TgAuthPageProps) {
     const token = decodeURIComponent((await params).token);
 
     const decodedToken = Buffer.from(token, "base64").toString("utf-8");

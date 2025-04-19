@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 export default async function RegisterPage(props: {
     searchParams: Promise<Record<string, string | string[] | undefined>>;
-}): Promise<React.ReactNode> {
+}) {
     const searchParams = await props.searchParams;
     const loginUrl = `/login${
         Object.keys(searchParams).length > 0

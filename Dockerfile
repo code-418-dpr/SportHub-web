@@ -1,12 +1,15 @@
 ARG BUN_VERSION=1.2
 FROM oven/bun:${BUN_VERSION}-slim AS base
+RUN apt-get update -y && apt-get install -y openssl
 WORKDIR /app
 COPY package.json .
 
 FROM base AS prod-deps
 COPY bun.lock .
+COPY src/prisma/schema.prisma src/prisma/schema.prisma
 RUN --mount=type=cache,id=bun,target=~/.bun/install/cache \
     bun install --frozen-lockfile --production --ignore-scripts
+RUN bun run prisma generate
 
 FROM prod-deps AS deps
 RUN --mount=type=cache,id=bun,target=~/.bun/install/cache \
@@ -22,7 +25,6 @@ RUN --mount=type=cache,target=/app/.next/cache \
 FROM prod-deps AS release
 COPY .env* .
 COPY --from=build /app/.next .next
-COPY --from=build /app/public public
 
 ENV NEXT_TELEMETRY_DISABLED=1
 USER bun
