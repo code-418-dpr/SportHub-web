@@ -4,8 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 
 import { EventCard } from "@/components/shared/event-card";
 import { getRecommendations } from "@/data/event";
-import { ExtendedEvent } from "@/prisma/types";
 
+import { ExtendedEvent } from "../../../prisma/types";
 import { Button } from "../ui/button";
 
 interface Props {

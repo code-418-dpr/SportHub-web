@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@/app/generated/prisma";
 
 export type ExtendedEvent = Prisma.EventGetPayload<{
     include: {

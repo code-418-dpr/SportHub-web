@@ -16,7 +16,7 @@
         "db:studio": "bun run prisma studio"
     },
     "prisma": {
-        "schema": "./src/prisma/schema.prisma"
+        "schema": "./prisma/schema.prisma"
     },
     "husky": {
         "hooks": {
@@ -36,14 +36,13 @@
         ]
     },
     "dependencies": {
-        "@prisma/client": "^6.6.0",
-        "prisma": "^6.6.0",
-        "next": "~15.2.4",
+        "@prisma/client": "^6.7.0",
+        "next": "~15.3.2",
+        "prisma": "^6.7.0",
         "react": "~19.1.0",
         "react-dom": "~19.1.0"
     },
     "devDependencies": {
-        "@auth/prisma-adapter": "^2.8.0",
         "@eslint/compat": "^1.2.7",
         "@eslint/eslintrc": "^3.3.1",
         "@eslint/js": "^9.23.0",
@@ -63,13 +62,13 @@
         "@tailwindcss/postcss": "^4",
         "@tanstack/react-table": "^8.21.2",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+        "@types/bcrypt": "^5.0.2",
         "@types/bcryptjs": "^3.0.0",
         "@types/node": "^22.13.14",
         "@types/react": "^19.0.12",
         "@types/react-dom": "^19.0.4",
         "@types/uuid": "^9.0.7",
-        "autoprefixer": "^10.0.1",
-        "bcryptjs": "^3.0.2",
+        "bcrypt": "^5.1.1",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "cmdk": "^1.1.1",
@@ -80,7 +79,7 @@
         "husky": "^9.1.7",
         "lint-staged": "^15.5.0",
         "lucide-react": "^0.485.0",
-        "next-auth": "^5.0.0-beta.25",
+        "next-auth": "^4.24.11",
         "next-themes": "^0.4.6",
         "postcss": "^8.5.3",
         "prettier": "^3.5.3",
