@@ -1,12 +1,12 @@
 "use server";
 
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
+
+import { getServerSession } from "next-auth";
 
 import { getUserByEmail, getUserById } from "@/data/user";
-import { currentUser } from "@/lib/auth";
-import { db } from "@/lib/db";
+import db from "@/lib/db";
 import { PasswordSettingsSchema, PersonalSettingsSchema } from "@/schemas";
-import { update } from "@/security/auth";
 
 export async function setPersonalSettings(_: string | undefined, formData: FormData) {
     const validatedFields = await PersonalSettingsSchema.safeParseAsync({
@@ -19,12 +19,13 @@ export async function setPersonalSettings(_: string | undefined, formData: FormD
 
     const values = validatedFields.data;
 
-    const user = await currentUser();
+    const session = await getServerSession();
+    const user = session?.user;
     if (!user) {
         return "Ошибка сессии";
     }
 
-    const dbUser = await getUserById(user.id!);
+    const dbUser = await getUserById(user.id);
     if (!dbUser) {
         return "Пользователь не существует";
     }
@@ -48,12 +49,8 @@ export async function setPersonalSettings(_: string | undefined, formData: FormD
         },
     });
 
-    await update({
-        user: {
-            name: updatedUser.name,
-            email: updatedUser.email,
-        },
-    });
+    session.user.name = updatedUser.name;
+    session.user.email = updatedUser.email;
 }
 
 export async function setPasswordSettings(_: string | undefined, formData: FormData) {
@@ -66,12 +63,13 @@ export async function setPasswordSettings(_: string | undefined, formData: FormD
     }
     const values = validatedFields.data;
 
-    const user = await currentUser();
+    const session = await getServerSession();
+    const user = session?.user;
     if (!user) {
         return "Ошибка сессии";
     }
 
-    const dbUser = await getUserById(user.id!);
+    const dbUser = await getUserById(user.id);
     if (!dbUser) {
         return "Пользователь не существует";
     }

@@ -1,8 +1,14 @@
+import React from "react";
+
 import { EventCard } from "@/components/shared/event-card";
 
 import { ExtendedEvent } from "../../../prisma/types";
 
-export function UserEvents({ events }: { events: ExtendedEvent[] }): React.ReactNode {
+interface UserEventsProps {
+    events: ExtendedEvent[];
+}
+
+export function UserEvents({ events }: UserEventsProps) {
     const pastEvents = events.filter((event) => event.start < new Date());
     const futureEvents = events.filter((event) => event.start > new Date());
 

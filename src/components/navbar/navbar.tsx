@@ -9,7 +9,7 @@ import { MobileNavbar } from "@/components/navbar/mobile-navbar";
 import { NavbarLink } from "@/components/navbar/navbar-link";
 import { ModeToggle } from "@/components/theming/mode-toggle";
 import siteMetadata from "@/conf/site-metadata";
-import { useCurrentUser } from "@/hooks/use-current-user";
+import { useAuth } from "@/hooks/use-auth";
 import { useScroll } from "@/hooks/use-scroll";
 import { cn } from "@/lib/utils";
 
@@ -23,7 +23,7 @@ function NavLinksBlock() {
 
 export function Navbar() {
     const scrolled = useScroll(10);
-    const user = useCurrentUser();
+    const { user } = useAuth();
 
     return (
         <header

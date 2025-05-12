@@ -1,7 +1,7 @@
 "use server";
 
-import { db } from "@/lib/db";
-import { Event } from "@prisma/client";
+import { Event } from "@/app/generated/prisma";
+import db from "@/lib/db";
 
 interface GetCategories {
     name?: string;

@@ -4,16 +4,16 @@ import { ArrowRightIcon, FlameIcon, MenuIcon } from "lucide-react";
 
 import React, { useState } from "react";
 
+import { signOut } from "next-auth/react";
 import Link, { LinkProps } from "next/link";
 
-import { logout } from "@/actions/logout";
 import { UserAvatar } from "@/components/auth/user-avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import siteMetadata from "@/conf/site-metadata";
-import { useCurrentUser } from "@/hooks/use-current-user";
+import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 
 interface MobileNavbarProps {
@@ -22,7 +22,7 @@ interface MobileNavbarProps {
 
 export function MobileNavbar({ className }: MobileNavbarProps) {
     const [open, setOpen] = useState(false);
-    const user = useCurrentUser();
+    const { user } = useAuth();
 
     const MobileLink = ({
         href,
@@ -91,7 +91,7 @@ export function MobileNavbar({ className }: MobileNavbarProps) {
                                         variant="ghost"
                                         className="h-auto w-full cursor-pointer justify-start p-0 text-base font-normal hover:bg-transparent"
                                         onClick={() => {
-                                            void logout();
+                                            void signOut();
                                         }}
                                     >
                                         Выйти

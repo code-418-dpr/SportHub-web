@@ -1,8 +1,11 @@
-import { Recommendations } from "@/components/recommendations/recommendations";
-import { auth } from "@/security/auth";
+"use client";
 
-export default async function RecommendationsPage() {
-    const session = await auth();
+import { useSession } from "next-auth/react";
+
+import { Recommendations } from "@/components/recommendations/recommendations";
+
+export default function RecommendationsPage() {
+    const { data: session } = useSession();
 
     if (!session?.user.id) {
         throw new Error("User not found");

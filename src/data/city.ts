@@ -1,7 +1,7 @@
 "use server";
 
-import { db } from "@/lib/db";
-import { City, Country, Event } from "@prisma/client";
+import { City, Country, Event } from "@/app/generated/prisma";
+import db from "@/lib/db";
 
 interface GetCities {
     name: string | undefined;

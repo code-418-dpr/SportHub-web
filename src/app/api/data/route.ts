@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-import { db } from "@/lib/db";
-import { Category } from "@prisma/client";
+import { Category } from "@/app/generated/prisma";
+import db from "@/lib/db";
 
 export const maxDuration = 60;
 

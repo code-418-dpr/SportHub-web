@@ -12,14 +12,14 @@ import { FormFeedback } from "@/components/shared/form-feedback";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useCurrentUser } from "@/hooks/use-current-user";
+import { useAuth } from "@/hooks/use-auth";
 import { PersonalSettingsSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 export function PersonalSettingsForm() {
     const [errorMessage, formAction, isPending] = useActionState(setPersonalSettings, undefined);
     const { update } = useSession();
-    const user = useCurrentUser();
+    const { user } = useAuth();
 
     const form = useForm<z.infer<typeof PersonalSettingsSchema>>({
         resolver: zodResolver(PersonalSettingsSchema),

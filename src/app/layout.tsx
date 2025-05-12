@@ -1,9 +1,10 @@
 import React from "react";
 
 import type { Metadata } from "next";
-import { SessionProvider } from "next-auth/react";
+import { getServerSession } from "next-auth";
 import { Inter } from "next/font/google";
 
+import AuthProvider from "@/components/auth/auth-provider";
 import { Navbar } from "@/components/navbar/navbar";
 import { ThemeProvider } from "@/components/theming/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -21,21 +22,23 @@ export const metadata: Metadata = {
     authors: [siteMetadata.authors],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const session = await getServerSession();
+
     return (
         <html lang="ru" suppressHydrationWarning>
             <body className={cn(inter.className, "min-h-screen")}>
-                <SessionProvider>
+                <AuthProvider session={session}>
                     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
                         <Toaster />
                         <Navbar />
                         <div className="mt-10">{children}</div>
                     </ThemeProvider>
-                </SessionProvider>
+                </AuthProvider>
             </body>
         </html>
     );

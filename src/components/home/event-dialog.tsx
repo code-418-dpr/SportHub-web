@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Link from "next/link";
 
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { addEventToUser, removeEventFromUser } from "@/data/event";
-import { useCurrentUser } from "@/hooks/use-current-user";
+import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
-import { ExtendedEvent } from "@/prisma/types";
 
-import { Button, buttonVariants } from "../ui/button";
+import { ExtendedEvent } from "../../../prisma/types";
 
 interface Props {
     isOpen: boolean;
@@ -18,7 +18,7 @@ interface Props {
 }
 
 export function EventDialog({ isOpen, setIsOpen, event, userEventIds }: Props): React.ReactNode {
-    const user = useCurrentUser();
+    const { user } = useAuth();
     const [participating, setParticipating] = useState(
         event ? (userEventIds ? userEventIds.includes(event.id) : false) : false,
     );
@@ -32,12 +32,12 @@ export function EventDialog({ isOpen, setIsOpen, event, userEventIds }: Props): 
     }
 
     async function handleCancelParticipation() {
-        await removeEventFromUser(user!.id!, event!.id);
+        await removeEventFromUser(user!.id, event!.id);
         setParticipating(false);
     }
 
     async function handleParticipate() {
-        await addEventToUser(user!.id!, event!.id);
+        await addEventToUser(user!.id, event!.id);
         setParticipating(true);
     }
 

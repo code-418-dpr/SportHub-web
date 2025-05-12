@@ -1,6 +1,6 @@
 import { CheckIcon } from "lucide-react";
 
-import { auth } from "@/security/auth";
+import { getServerSession } from "next-auth";
 
 interface TgAuthPageProps {
     params: Promise<{ token: string }>;
@@ -17,7 +17,7 @@ export default async function TgAuthPage({ params }: TgAuthPageProps) {
         throw new Error("Not expected");
     }
 
-    const session = await auth();
+    const session = await getServerSession();
     if (!session) {
         throw new Error("Not expected");
     }

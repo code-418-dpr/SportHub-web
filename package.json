@@ -63,7 +63,6 @@
         "@tanstack/react-table": "^8.21.2",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
         "@types/bcrypt": "^5.0.2",
-        "@types/bcryptjs": "^3.0.0",
         "@types/node": "^22.13.14",
         "@types/react": "^19.0.12",
         "@types/react-dom": "^19.0.4",
@@ -100,5 +99,6 @@
         "uuid": "^10.0.0",
         "vaul": "^1.1.2",
         "zod": "^3.24.3"
-    }
+    },
+    "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

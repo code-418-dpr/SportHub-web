@@ -4,10 +4,10 @@ import { ArrowRightIcon, LogOutIcon, SettingsIcon } from "lucide-react";
 
 import React from "react";
 
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { logout } from "@/actions/logout";
 import { UserAvatar } from "@/components/auth/user-avatar";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -16,11 +16,11 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useCurrentUser } from "@/hooks/use-current-user";
+import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 
 export const UserButton = () => {
-    const user = useCurrentUser();
+    const { user } = useAuth();
     const pathname = usePathname();
 
     if (pathname === "/login" || pathname === "/register") {
@@ -51,7 +51,7 @@ export const UserButton = () => {
                 <DropdownMenuItem
                     className="cursor-pointer"
                     onClick={() => {
-                        void logout();
+                        void signOut();
                     }}
                 >
                     <LogOutIcon className="mr-2 size-4" />

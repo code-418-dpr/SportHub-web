@@ -1,8 +1,9 @@
 "use server";
 
-import { db } from "@/lib/db";
-import { ExtendedEvent } from "@/prisma/types";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@/app/generated/prisma";
+import db from "@/lib/db";
+
+import { ExtendedEvent } from "../../prisma/types";
 
 interface GetEvent {
     sportIds?: string[];

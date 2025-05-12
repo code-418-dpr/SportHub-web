@@ -2,23 +2,34 @@
 
 import z from "zod";
 
-import React, { startTransition, useActionState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 
-import { login } from "@/actions/login";
-import { register } from "@/actions/register";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 import { FormFeedback } from "@/components/shared/form-feedback";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { createUser } from "@/data/user";
 import { LoginAndRegisterSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-export const LoginOrRegisterForm = ({ mode }: { mode?: "login" | "register" }) => {
-    mode ??= "login";
-    const [errorMessage, formAction, isPending] = useActionState(mode === "login" ? login : register, undefined);
+interface LoginOrRegisterFormProps {
+    mode?: "login" | "register";
+}
 
-    const form = useForm<z.infer<typeof LoginAndRegisterSchema>>({
+type LoginAndRegisterFormData = z.infer<typeof LoginAndRegisterSchema>;
+
+export const LoginOrRegisterForm = ({ mode }: LoginOrRegisterFormProps) => {
+    mode ??= "login";
+    // const [errorMessage, formAction, isPending] = useActionState(mode === "login" ? login : register, undefined);
+    const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
+    const [formError, setFormError] = useState<string | null>(null);
+
+    const form = useForm({
         resolver: zodResolver(LoginAndRegisterSchema),
         defaultValues: {
             email: "",
@@ -26,22 +37,47 @@ export const LoginOrRegisterForm = ({ mode }: { mode?: "login" | "register" }) =
         },
     });
 
-    const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
-        event.preventDefault();
-        void form.handleSubmit((data) => {
-            const formData = new FormData();
-            formData.append("email", data.email);
-            formData.append("password", data.password);
+    const onSubmit: SubmitHandler<LoginAndRegisterFormData> = async ({ email, password }) => {
+        try {
+            setIsLoading(true);
+            setFormError(null);
 
-            startTransition(() => {
-                formAction(formData);
+            if (mode === "register") {
+                await createUser(email, password);
+            }
+
+            const signInResult = await signIn("credentials", {
+                email,
+                password,
+                redirect: false,
             });
-        })(event);
+            if (signInResult?.error) {
+                throw new Error(signInResult.error);
+            }
+            router.push("/");
+            router.refresh();
+        } catch (error) {
+            if (error instanceof Error) {
+                if (error.message.includes("email")) {
+                    form.setError("root", { message: error.message });
+                    setFormError(error.message);
+                } else {
+                    setFormError(error.message);
+                }
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleFormSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        void form.handleSubmit(onSubmit)(e);
     };
 
     return (
         <Form {...form}>
-            <form onSubmit={onSubmit} className="space-y-6">
+            <form onSubmit={handleFormSubmit} className="space-y-6">
                 <div className="space-y-4">
                     <FormField
                         control={form.control}
@@ -52,7 +88,7 @@ export const LoginOrRegisterForm = ({ mode }: { mode?: "login" | "register" }) =
                                 <FormControl>
                                     <Input
                                         {...field}
-                                        disabled={isPending}
+                                        disabled={isLoading}
                                         placeholder="john.doe@example.com"
                                         autoComplete="email"
                                     />
@@ -70,7 +106,7 @@ export const LoginOrRegisterForm = ({ mode }: { mode?: "login" | "register" }) =
                                 <FormControl>
                                     <Input
                                         {...field}
-                                        disabled={isPending}
+                                        disabled={isLoading}
                                         placeholder="******"
                                         type="password"
                                         autoComplete="current-password"
@@ -81,8 +117,8 @@ export const LoginOrRegisterForm = ({ mode }: { mode?: "login" | "register" }) =
                         )}
                     />
                 </div>
-                <FormFeedback errorMessage={errorMessage} />
-                <Button disabled={isPending} type="submit" className="w-full">
+                <FormFeedback errorMessage={formError ?? undefined} />
+                <Button disabled={isLoading} type="submit" className="w-full">
                     {mode === "login" ? "Войти" : "Создать аккаунт"}
                 </Button>
             </form>

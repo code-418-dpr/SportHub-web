@@ -5,16 +5,16 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { DateRange } from "react-day-picker";
 
+import { Category, City, Country, SportDiscipline, Team } from "@/app/generated/prisma";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getCitiesOfCountries } from "@/data/city";
 import { getFilteredEventWithPagination } from "@/data/event";
-import { ExtendedEvent } from "@/prisma/types";
-import { Category, City, Country, SportDiscipline, Team } from "@prisma/client";
 import { CaretDownIcon, CaretSortIcon, CaretUpIcon } from "@radix-ui/react-icons";
 import { ColumnDef, SortingState, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 
+import { ExtendedEvent } from "../../../prisma/types";
 import { MultiCombobox } from "../shared/multi-combobox";
 import { Label } from "../ui/label";
 import { DatePicker } from "./date-picker";
