@@ -8,6 +8,7 @@
 [![linters](https://github.com/code-418-dpr/SportHub-web/actions/workflows/linters.yaml/badge.svg)](https://github.com/code-418-dpr/SportHub-web/actions/workflows/linters.yaml)
 [![codeql](https://github.com/code-418-dpr/SportHub-web/actions/workflows/codeql.yaml/badge.svg)](https://github.com/code-418-dpr/SportHub-web/actions/workflows/codeql.yaml)
 [![build](https://github.com/code-418-dpr/SportHub-web/actions/workflows/build.yaml/badge.svg)](https://github.com/code-418-dpr/SportHub-web/actions/workflows/build.yaml)
+[![docker build](https://github.com/code-418-dpr/SportHub-web/actions/workflows/docker.yaml/badge.svg)](https://github.com/code-418-dpr/SportHub-web/actions/workflows/docker.yaml)
 
 Веб-приложение для проекта [SportHub](https://github.com/code-418-dpr/SportHub)
 
