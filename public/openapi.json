@@ -1,0 +1,193 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "SportHub-web API",
+        "description": "API веб-приложения проекта SportHub",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000",
+            "description": "Сервер веб-приложения"
+        }
+    ],
+    "paths": {
+        "/api/data": {
+            "post": {
+                "summary": "Получение событий от парсера",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/JsonEvent"
+                                }
+                            },
+                            "examples": {
+                                "example": {
+                                    "value": [
+                                        {
+                                            "sport": "Спортивное прогрммирование",
+                                            "team": "Основной состав",
+                                            "id": 1,
+                                            "title": "Чемпионат России по спортивному программированию",
+                                            "categories": ["Professional", "International"],
+                                            "participants": "Юниоры и юниорки (14 — 18 лет, 19 — 22 года)",
+                                            "ages": [
+                                                [14, 18],
+                                                [19, 22]
+                                            ],
+                                            "genders": [true, false],
+                                            "country": "Россия",
+                                            "city": "Москва",
+                                            "start": "01.01.2023",
+                                            "end": "01.01.2023",
+                                            "participants_count": 22
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Успешный импорт событий",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Невалидный JSON",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "JsonEvent": {
+                "type": "object",
+                "required": [
+                    "sport",
+                    "team",
+                    "id",
+                    "title",
+                    "participants",
+                    "ages",
+                    "genders",
+                    "country",
+                    "city",
+                    "start",
+                    "end",
+                    "participants_count"
+                ],
+                "properties": {
+                    "sport": {
+                        "type": "string",
+                        "description": "Вид спорта"
+                    },
+                    "team": {
+                        "type": "string",
+                        "description": "Команда"
+                    },
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Уникальный идентификатор события"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "Название события"
+                    },
+                    "categories": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Категории события",
+                        "nullable": true
+                    },
+                    "participants": {
+                        "type": "string",
+                        "description": "Участники события"
+                    },
+                    "ages": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "format": "int32"
+                            },
+                            "minItems": 2,
+                            "maxItems": 2
+                        },
+                        "description": "Диапазоны возрастов участников"
+                    },
+                    "genders": {
+                        "type": "array",
+                        "items": {
+                            "type": "boolean"
+                        },
+                        "description": "Допустимые полы участников (true - мужской, false - женский)"
+                    },
+                    "country": {
+                        "type": "string",
+                        "description": "Страна проведения"
+                    },
+                    "city": {
+                        "type": "string",
+                        "description": "Город проведения"
+                    },
+                    "start": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Дата начала в формате DD.MM.YYYY"
+                    },
+                    "end": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Дата окончания в формате DD.MM.YYYY"
+                    },
+                    "participants_count": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "Количество участников"
+                    }
+                }
+            },
+            "SuccessResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Success"
+                    }
+                }
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Invalid JSON"
+                    }
+                }
+            }
+        }
+    }
+}
