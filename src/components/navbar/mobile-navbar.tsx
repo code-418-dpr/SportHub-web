@@ -6,6 +6,7 @@ import React, { useState } from "react";
 
 import { signOut } from "next-auth/react";
 import Link, { LinkProps } from "next/link";
+import { useRouter } from "next/navigation";
 
 import { UserAvatar } from "@/components/auth/user-avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -23,6 +24,7 @@ interface MobileNavbarProps {
 export function MobileNavbar({ className }: MobileNavbarProps) {
     const [open, setOpen] = useState(false);
     const { user } = useAuth();
+    const router = useRouter();
 
     const MobileLink = ({
         href,
@@ -92,6 +94,8 @@ export function MobileNavbar({ className }: MobileNavbarProps) {
                                         className="h-auto w-full cursor-pointer justify-start p-0 text-base font-normal hover:bg-transparent"
                                         onClick={() => {
                                             void signOut();
+                                            router.push("/");
+                                            router.refresh();
                                         }}
                                     >
                                         Выйти

@@ -6,7 +6,7 @@ import React from "react";
 
 import { signOut } from "next-auth/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { UserAvatar } from "@/components/auth/user-avatar";
 import { buttonVariants } from "@/components/ui/button";
@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils";
 
 export const UserButton = () => {
     const { user } = useAuth();
+    const router = useRouter();
     const pathname = usePathname();
 
     if (pathname === "/login" || pathname === "/register") {
@@ -52,6 +53,8 @@ export const UserButton = () => {
                     className="cursor-pointer"
                     onClick={() => {
                         void signOut();
+                        router.push("/");
+                        router.refresh();
                     }}
                 >
                     <LogOutIcon className="mr-2 size-4" />

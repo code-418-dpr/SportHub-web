@@ -1,6 +1,7 @@
 "use server";
 
 import { Prisma } from "@/app/generated/prisma";
+import { getUserById } from "@/data/user";
 import db from "@/lib/db";
 
 import { ExtendedEvent } from "../../prisma/types";
@@ -245,9 +246,7 @@ export const getRecommendations = async (userId: string | undefined, count: numb
     let teamId: string | undefined;
 
     if (userId) {
-        const user = await db.user.findUnique({
-            where: { id: userId },
-        });
+        const user = await getUserById(userId);
 
         if (user?.eventIds.length) {
             const eventId = user.eventIds[Math.floor(Math.random() * user.eventIds.length)];
