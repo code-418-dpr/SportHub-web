@@ -62,7 +62,6 @@
         "@tailwindcss/postcss": "^4",
         "@tanstack/react-table": "^8.21.2",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-        "@types/bcrypt": "^5.0.2",
         "@types/node": "^22.13.14",
         "@types/react": "^19.0.12",
         "@types/react-dom": "^19.0.4",
