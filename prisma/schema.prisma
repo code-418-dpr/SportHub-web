@@ -6,7 +6,7 @@ datasource db {
 generator client {
   provider      = "prisma-client-js"
   output        = "../src/app/generated/prisma"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 enum UserRole {
@@ -93,6 +93,7 @@ model Event {
   genders          Boolean[]
   ages             Int[]
   participants     String
+  createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
   isDeleted        Boolean   @default(false)
 
