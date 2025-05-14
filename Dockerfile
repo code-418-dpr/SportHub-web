@@ -26,6 +26,7 @@ RUN --mount=type=cache,target=/app/.next/cache \
 FROM prod-deps AS release
 COPY .env* .
 COPY --from=build /app/.next .next
+COPY --from=build /app/public public
 
 ENV NEXT_TELEMETRY_DISABLED=1
 USER bun
