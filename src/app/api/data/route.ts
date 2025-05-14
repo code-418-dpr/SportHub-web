@@ -147,8 +147,6 @@ export async function POST(request: Request) {
                     },
                 });
             }
-
-            //await SoftDelete(event);
         }
 
         return NextResponse.json({ message: "Success" }, { status: 201 });
@@ -157,39 +155,3 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: "Invalid JSON" }, { status: 400 });
     }
 }
-
-// async function SoftDelete(event: JsonEvent) {
-//     const isEventExist = await db.event.findUnique({
-//         where: { id: event.id },
-//         include: {
-//             city: true,
-//             team: true,
-//             categories: true,
-//         },
-//     });
-//
-//     if (isEventExist) {
-//         const oneHourAgo = new Date(Date.now() - 3600000);
-//         if (isEventExist.updatedAt > oneHourAgo) {
-//             return;
-//         }
-//
-//         const changedFields = Object.entries(event)
-//             .filter(([key, value]) => {
-//                 const isEventExistKey = key as keyof typeof isEventExist;
-//                 return isEventExist[isEventExistKey] !== value;
-//             })
-//             .map(([key]) => key);
-//
-//         if (changedFields.length > 0) {
-//             await db.event.update({ where: { id: isEventExist.id }, data: { isDeleted: true } });
-//         }
-//         // await SendNotification();
-//
-//         return true;
-//     }
-//
-//     // await SendNotification();
-//
-//     return false;
-// }
