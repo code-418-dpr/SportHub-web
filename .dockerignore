@@ -26,6 +26,7 @@
 **/LICENSE
 **/*.md
 **/.env.template
+**/_.env
 .editorconfig
 helm-charts
 coverage*

@@ -1,6 +1,7 @@
 ARG BUN_VERSION=1.2
 FROM oven/bun:${BUN_VERSION}-slim AS base
-RUN apt-get update -y && apt-get install -y openssl
+RUN ["apt-get", "update", "-y"]
+RUN ["apt-get", "install", "-y", "openssl"]
 WORKDIR /app
 COPY package.json .
 
