@@ -14,7 +14,7 @@ export async function middleware(request: NextRequest) {
             loginUrl.searchParams.set("callbackUrl", pathname);
             return NextResponse.redirect(loginUrl);
         }
-        if (token.role !== "admin") {
+        if (token.role !== "USER") {
             return NextResponse.redirect(loginUrl);
         }
     }

@@ -193,16 +193,16 @@ export const getFilteredEventWithPagination = async (request: GetEvent) => {
     };
 };
 
-export const getUserEventIds = async (userId: string): Promise<bigint[]> => {
+export const getUserEventIds = async (emailUser: string): Promise<bigint[]> => {
     const user = await db.user.findUnique({
-        where: { id: userId },
+        where: { email: emailUser },
         select: { eventIds: true },
     });
     return user?.eventIds ?? [];
 };
 
-export const getUserEvents = async (userId: string): Promise<ExtendedEvent[]> => {
-    const eventIds = await getUserEventIds(userId);
+export const getUserEvents = async (emailUser: string): Promise<ExtendedEvent[]> => {
+    const eventIds = await getUserEventIds(emailUser);
 
     return db.event.findMany({
         where: {
