@@ -7,8 +7,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { addEventToUser, removeEventFromUser } from "@/data/event";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
-
-import { ExtendedEvent } from "../../../prisma/types";
+import { ExtendedEvent } from "@/prisma/types";
 
 interface Props {
     isOpen: boolean;
@@ -32,12 +31,12 @@ export function EventDialog({ isOpen, setIsOpen, event, userEventIds }: Props): 
     }
 
     async function handleCancelParticipation() {
-        await removeEventFromUser(user!.id, event!.id);
+        await removeEventFromUser(user!.email!, event!.id);
         setParticipating(false);
     }
 
     async function handleParticipate() {
-        await addEventToUser(user!.id, event!.id);
+        await addEventToUser(user!.email!, event!.id);
         setParticipating(true);
     }
 

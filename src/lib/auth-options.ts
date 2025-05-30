@@ -19,10 +19,6 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials) {
                 try {
-                    if (!credentials?.email || !credentials.password) {
-                        return null;
-                    }
-
                     const validatedFields = await LoginAndRegisterSchema.safeParseAsync(credentials);
                     if (!validatedFields.success) {
                         return null;

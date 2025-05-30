@@ -4,21 +4,21 @@ import { useCallback, useEffect, useState } from "react";
 
 import { EventCard } from "@/components/shared/event-card";
 import { getRecommendations } from "@/data/event";
+import { ExtendedEvent } from "@/prisma/types";
 
-import { ExtendedEvent } from "../../../prisma/types";
 import { Button } from "../ui/button";
 
 interface Props {
-    userId: string;
+    userEmail: string;
 }
 
-export function Recommendations({ userId }: Props) {
+export function Recommendations({ userEmail }: Props) {
     const [recommendations, setRecommendations] = useState<ExtendedEvent[]>([]);
 
     const fetchRecommendations = useCallback(async () => {
-        const recommendations = await getRecommendations(userId, 3);
+        const recommendations = await getRecommendations(userEmail, 3);
         setRecommendations(recommendations);
-    }, [userId]);
+    }, [userEmail]);
 
     useEffect(() => {
         void fetchRecommendations();

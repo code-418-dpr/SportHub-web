@@ -1,10 +1,9 @@
 "use server";
 
 import { Prisma } from "@/app/generated/prisma";
-import { getUserById } from "@/data/user";
+import { getUserByEmail } from "@/data/user";
 import db from "@/lib/db";
-
-import { ExtendedEvent } from "../../prisma/types";
+import { ExtendedEvent } from "@/prisma/types";
 
 interface GetEvent {
     sportIds?: string[];
@@ -221,32 +220,32 @@ export const getUserEvents = async (emailUser: string): Promise<ExtendedEvent[]>
     });
 };
 
-export const addEventToUser = async (userId: string, eventId: bigint): Promise<void> => {
+export const addEventToUser = async (userEmail: string, eventId: bigint): Promise<void> => {
     await db.user.update({
-        where: { id: userId },
+        where: { email: userEmail },
         data: {
             eventIds: { push: BigInt(eventId) },
         },
     });
 };
 
-export const removeEventFromUser = async (userId: string, eventId: bigint): Promise<void> => {
+export const removeEventFromUser = async (userEmail: string, eventId: bigint): Promise<void> => {
     await db.user.update({
-        where: { id: userId },
+        where: { email: userEmail },
         data: {
             eventIds: {
-                set: (await getUserEventIds(userId)).filter((id) => id !== eventId),
+                set: (await getUserEventIds(userEmail)).filter((id) => id !== eventId),
             },
         },
     });
 };
 
-export const getRecommendations = async (userId: string | undefined, count: number): Promise<ExtendedEvent[]> => {
+export const getRecommendations = async (userEmail: string | undefined, count: number): Promise<ExtendedEvent[]> => {
     let sportId: string | undefined;
     let teamId: string | undefined;
 
-    if (userId) {
-        const user = await getUserById(userId);
+    if (userEmail) {
+        const user = await getUserByEmail(userEmail);
 
         if (user?.eventIds.length) {
             const eventId = user.eventIds[Math.floor(Math.random() * user.eventIds.length)];

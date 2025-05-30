@@ -13,7 +13,7 @@ export default function History() {
     const { data: session } = useSession();
     const [events, setEvents] = useState<ExtendedEvent[]>();
 
-    if (!session?.user.id) {
+    if (!session?.user.email) {
         throw new Error("User not found");
     }
 
@@ -24,7 +24,7 @@ export default function History() {
         };
 
         void fetchEvents();
-    }, [session.user.id]);
+    }, [session.user.email]);
 
     return <main className="flex-1 space-y-6">{events && <UserEvents events={events} />}</main>;
 }

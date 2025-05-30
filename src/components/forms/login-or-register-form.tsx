@@ -22,8 +22,7 @@ interface LoginOrRegisterFormProps {
 
 type LoginAndRegisterFormData = z.infer<typeof LoginAndRegisterSchema>;
 
-export const LoginOrRegisterForm = ({ mode }: LoginOrRegisterFormProps) => {
-    mode ??= "login";
+export const LoginOrRegisterForm = ({ mode = "login" }: LoginOrRegisterFormProps) => {
     // const [errorMessage, formAction, isPending] = useActionState(mode === "login" ? login : register, undefined);
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
