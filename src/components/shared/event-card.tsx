@@ -2,8 +2,7 @@ import { CalendarIcon, FlagIcon, MapPinIcon, TrophyIcon, UsersIcon } from "lucid
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-
-import { ExtendedEvent } from "../../../prisma/types";
+import { ExtendedEvent } from "@/prisma/types";
 
 export function EventCard({ event }: { event: ExtendedEvent }) {
     return (

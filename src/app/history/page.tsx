@@ -6,8 +6,7 @@ import { useSession } from "next-auth/react";
 
 import { UserEvents } from "@/components/history/user-events";
 import { getUserEvents } from "@/data/event";
-
-import type { ExtendedEvent } from "../../../prisma/types";
+import type { ExtendedEvent } from "@/prisma/types";
 
 export default function History() {
     const { data: session } = useSession();

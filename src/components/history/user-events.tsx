@@ -1,8 +1,7 @@
 import React from "react";
 
 import { EventCard } from "@/components/shared/event-card";
-
-import { ExtendedEvent } from "../../../prisma/types";
+import { ExtendedEvent } from "@/prisma/types";
 
 interface UserEventsProps {
     events: ExtendedEvent[];

@@ -11,10 +11,10 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getCitiesOfCountries } from "@/data/city";
 import { getFilteredEventWithPagination } from "@/data/event";
+import { ExtendedEvent } from "@/prisma/types";
 import { CaretDownIcon, CaretSortIcon, CaretUpIcon } from "@radix-ui/react-icons";
 import { ColumnDef, SortingState, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 
-import { ExtendedEvent } from "../../../prisma/types";
 import { MultiCombobox } from "../shared/multi-combobox";
 import { Label } from "../ui/label";
 import { DatePicker } from "./date-picker";
