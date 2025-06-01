@@ -85,7 +85,7 @@
         "postcss": "^8.5.3",
         "prettier": "^3.5.3",
         "prettier-plugin-tailwindcss": "^0.6.8",
-        "react-day-picker": "~8.10.1",
+        "react-day-picker": "~9.7.0",
         "react-hook-form": "^7.55.0",
         "react-spinners": "^0.17.0",
         "shadcn": "^2.4.1",
