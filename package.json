@@ -74,7 +74,7 @@
         "cmdk": "^1.1.1",
         "date-fns": "^4.1.0",
         "eslint": "^9.23.0",
-        "eslint-config-next": "~15.2.4",
+        "eslint-config-next": "~15.3.3",
         "eslint-config-prettier": "^10.1.1",
         "husky": "^9.1.7",
         "lint-staged": "^15.5.0",
