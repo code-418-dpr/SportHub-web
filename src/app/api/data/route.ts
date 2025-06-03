@@ -21,6 +21,8 @@ interface JsonEvent {
     participants_count: number;
 }
 
+export const messages: string[] = [];
+
 export async function POST(request: Request) {
     try {
         const eventsData: JsonEvent[] = (await request.json()) as JsonEvent[];
@@ -117,8 +119,7 @@ export async function POST(request: Request) {
                         },
                     });
 
-                    //Отправляем уведомления
-                    // await SendNotification();
+                    messages.push(`Обновление: событие ${event.id} было обновлено `);
                 } else {
                     await db.event.update({
                         where: { id },
@@ -146,9 +147,10 @@ export async function POST(request: Request) {
                         sportDisciplineId: sportDisciplineRecord.id,
                     },
                 });
+
+                messages.push(`Создание:новое событие ${event.id} было добавлено `);
             }
         }
-
         return NextResponse.json({ message: "Success" }, { status: 201 });
     } catch (error) {
         console.error("Error parsing JSON:", error);
