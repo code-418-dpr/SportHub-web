@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import Link from "next/link";
 
+import { subscribeOnEmailNotificationsRequest } from "@/app/api/notification/notifications";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { addEventToUser, removeEventFromUser } from "@/data/event";
@@ -18,6 +19,7 @@ interface Props {
 
 export function EventDialog({ isOpen, setIsOpen, event, userEventIds }: Props): React.ReactNode {
     const { user } = useAuth();
+
     const [participating, setParticipating] = useState(
         event ? (userEventIds ? userEventIds.includes(event.id) : false) : false,
     );
@@ -31,13 +33,27 @@ export function EventDialog({ isOpen, setIsOpen, event, userEventIds }: Props): 
     }
 
     async function handleCancelParticipation() {
-        await removeEventFromUser(user!.email!, event!.id);
+        await removeEventFromUser(user!.email, event!.id);
         setParticipating(false);
     }
 
     async function handleParticipate() {
-        await addEventToUser(user!.email!, event!.id);
-        setParticipating(true);
+        try {
+            await addEventToUser(user!.email, event!.id);
+            setParticipating(true);
+
+            const subject = `Участие в событии ${event?.name} (${event?.id})`;
+
+            const body = `Вы участвуете в событии ${event?.name} (${event?.id}), которое пройдет в период c ${event?.start} по ${event?.end}.`;
+
+            const response = await subscribeOnEmailNotificationsRequest(user!.email, new Date(), subject, body);
+
+            if (response.status !== 200) {
+                throw new Error(response.statusText);
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (

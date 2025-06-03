@@ -16,3 +16,9 @@ export const createUser = async (email: string, password: string) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     return db.user.create({ data: { email, password: hashedPassword } });
 };
+
+export const getAllUserEmails = async () => {
+    const userEmails = await db.user.findMany({ select: { email: true } });
+
+    return userEmails.map(({ email }) => email);
+};
