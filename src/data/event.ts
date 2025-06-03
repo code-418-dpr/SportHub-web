@@ -269,12 +269,25 @@ export const getRecommendations = async (userEmail: string | undefined, count: n
             team: {
                 id: teamId,
             },
+            start: {
+                gt: new Date(),
+            },
         },
     });
+
+    if (eventsCount === 0) return [];
+
     const events: ExtendedEvent[] = [];
+    const usedIndexes = new Set<number>();
 
     for (let i = 0; i < count; i++) {
         const skip = Math.min(Math.floor(Math.random() * eventsCount), eventsCount - 1);
+
+        if (usedIndexes.has(skip)) continue;
+
+        usedIndexes.add(skip);
+
+        console.log(skip);
 
         const event = await db.event.findFirst({
             skip,
@@ -284,6 +297,9 @@ export const getRecommendations = async (userEmail: string | undefined, count: n
                 },
                 team: {
                     id: teamId,
+                },
+                start: {
+                    gt: new Date(),
                 },
             },
             include: {

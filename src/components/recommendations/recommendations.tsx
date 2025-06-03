@@ -30,7 +30,7 @@ export function Recommendations({ userEmail }: Props) {
                 <h1 className="text-3xl font-bold">Рекомендации</h1>
                 <div className="space-y-4">
                     {recommendations.map((event) => (
-                        <EventCard key={event.id.toString()} event={event} />
+                        <EventCard key={`${event.id}-${Math.random()}`} event={event} />
                     ))}
                 </div>
                 <div className="flex justify-center">
