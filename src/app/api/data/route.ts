@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { messages } from "@/app/api/data/constants";
 import { Category } from "@/app/generated/prisma";
 import db from "@/lib/db";
 
@@ -20,8 +21,6 @@ interface JsonEvent {
     end: string;
     participants_count: number;
 }
-
-export const messages: string[] = [];
 
 export async function POST(request: Request) {
     try {

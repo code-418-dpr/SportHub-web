@@ -18,7 +18,7 @@ export default function History() {
 
     useEffect(() => {
         const fetchEvents = async () => {
-            const data = await getUserEvents(session.user.email!);
+            const data = await getUserEvents(session.user.email);
             setEvents(data);
         };
 

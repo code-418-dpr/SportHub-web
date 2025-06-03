@@ -30,7 +30,7 @@ export default function Home() {
             setSportDisciplines(sportDisciplinesData);
             const teamsData = await getTeams();
             setTeams(teamsData);
-            const userEventIdsData = session ? await getUserEventIds(session.user.email!) : null;
+            const userEventIdsData = session ? await getUserEventIds(session.user.email) : null;
             setUserEventIds(userEventIdsData);
         };
         void fetchData();

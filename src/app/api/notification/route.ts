@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { messages } from "@/app/api/data/route";
+import { messages } from "@/app/api/data/constants";
 import { sendEmailNotificationsAboutUpdate } from "@/app/api/notification/notifications";
 import { getAllUserEmails } from "@/data/user";
 
