@@ -39,7 +39,7 @@ export function EventCard({ event }: { event: ExtendedEvent }) {
                     </div>
                     <div className="flex items-center space-x-2">
                         <TrophyIcon className="text-muted-foreground h-5 w-5" />
-                        <span>{event.SportDiscipline?.name ?? "Без дисциплины"}</span>
+                        <span>{event.sportDiscipline?.name ?? "Без дисциплины"}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                         <FlagIcon className="text-muted-foreground h-5 w-5" />

@@ -50,7 +50,7 @@ export async function setPersonalSettings(_: string | undefined, formData: FormD
     });
 
     session.user.name = updatedUser.name;
-    session.user.email = updatedUser.email;
+    session.user.email = updatedUser.email!;
 }
 
 export async function setPasswordSettings(_: string | undefined, formData: FormData) {

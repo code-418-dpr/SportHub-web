@@ -124,7 +124,7 @@ export const getFilteredEventWithPagination = async (request: GetEvent) => {
         if (request.sortBy && request.sortDirection) {
             if (request.sortBy === "sport") {
                 orderBy = {
-                    SportDiscipline: {
+                    sportDiscipline: {
                         name: request.sortDirection as Prisma.SortOrder,
                     },
                 };
@@ -170,7 +170,7 @@ export const getFilteredEventWithPagination = async (request: GetEvent) => {
             skip: request.page * request.pageSize,
             take: request.pageSize,
             include: {
-                SportDiscipline: true,
+                sportDiscipline: true,
                 city: {
                     include: {
                         country: true,
@@ -208,7 +208,7 @@ export const getUserEvents = async (emailUser: string): Promise<ExtendedEvent[]>
             id: { in: eventIds },
         },
         include: {
-            SportDiscipline: true,
+            sportDiscipline: true,
             city: {
                 include: {
                     country: true,
@@ -241,7 +241,7 @@ export const removeEventFromUser = async (userEmail: string, eventId: bigint): P
 };
 
 export const getRecommendations = async (userEmail: string | undefined, count: number): Promise<ExtendedEvent[]> => {
-    let sportId: string | undefined;
+    let sportDisciplineId: string | null | undefined;
     let teamId: string | undefined;
 
     if (userEmail) {
@@ -252,23 +252,18 @@ export const getRecommendations = async (userEmail: string | undefined, count: n
             const event = await db.event.findUnique({
                 where: { id: eventId },
                 include: {
-                    SportDiscipline: true,
                     team: true,
                 },
             });
-            sportId = event?.SportDiscipline?.id;
+            sportDisciplineId = event?.sportDisciplineId;
             teamId = event?.team.id;
         }
     }
 
     const eventsCount = await db.event.count({
         where: {
-            SportDiscipline: {
-                id: sportId,
-            },
-            team: {
-                id: teamId,
-            },
+            sportDisciplineId,
+            teamId,
             start: {
                 gt: new Date(),
             },
@@ -292,18 +287,14 @@ export const getRecommendations = async (userEmail: string | undefined, count: n
         const event = await db.event.findFirst({
             skip,
             where: {
-                SportDiscipline: {
-                    id: sportId,
-                },
-                team: {
-                    id: teamId,
-                },
+                sportDisciplineId,
+                teamId,
                 start: {
                     gt: new Date(),
                 },
             },
             include: {
-                SportDiscipline: true,
+                sportDiscipline: true,
                 city: {
                     include: {
                         country: true,

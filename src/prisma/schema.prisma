@@ -17,7 +17,7 @@ enum UserRole {
 model User {
   id            String    @id @default(uuid())
   name          String?
-  email         String   @unique
+  email         String    @unique
   emailVerified DateTime?
   image         String?
   password      String?
@@ -83,23 +83,23 @@ model City {
 }
 
 model Event {
-  id               BigInt    @id
-  cityId           String
-  teamId           String
-  name             String
-  start            DateTime  @db.Date
-  end              DateTime  @db.Date
-  participantCount Int
-  genders          Boolean[]
-  ages             Int[]
-  participants     String
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  isDeleted        Boolean   @default(false)
-
-  city              City             @relation(fields: [cityId], references: [id])
-  team              Team             @relation(fields: [teamId], references: [id])
-  categories        Category[]
-  SportDiscipline   SportDiscipline? @relation(fields: [sportDisciplineId], references: [id])
+  id                BigInt    @id
+  cityId            String
+  teamId            String
+  name              String
+  start             DateTime  @db.Date
+  end               DateTime  @db.Date
   sportDisciplineId String?
+  participantCount  Int
+  genders           Boolean[]
+  ages              Int[]
+  participants      String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  isDeleted         Boolean   @default(false)
+
+  city            City             @relation(fields: [cityId], references: [id])
+  team            Team             @relation(fields: [teamId], references: [id])
+  categories      Category[]
+  sportDiscipline SportDiscipline? @relation(fields: [sportDisciplineId], references: [id])
 }

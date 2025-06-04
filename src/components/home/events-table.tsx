@@ -41,7 +41,7 @@ export const columns: ColumnDef<ExtendedEvent>[] = [
                 )}
             </Button>
         ),
-        cell: ({ row }) => <div className="lowercase first-letter:uppercase">{row.original.SportDiscipline?.name}</div>,
+        cell: ({ row }) => <div className="lowercase first-letter:uppercase">{row.original.sportDiscipline?.name}</div>,
         size: 15,
     },
     {
@@ -269,7 +269,7 @@ export function EventsTable({ countries, categories, sportDisciplines, teams, us
             end: Date | undefined,
             sortBy: string | undefined,
             sortDirection: "asc" | "desc" | undefined,
-        ): Promise<void> => {
+        ) => {
             const { events: eventsData, total: rowCount } = await getFilteredEventWithPagination({
                 page: pagination.pageIndex,
                 pageSize: pagination.pageSize,

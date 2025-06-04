@@ -1,1 +1,2 @@
-export const messages: string[] = [];
+export const updateMessages: string[] = [];
+export const createMessages: string[] = [];

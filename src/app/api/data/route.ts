@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { messages } from "@/app/api/data/constants";
+import { createMessages, updateMessages } from "@/app/api/data/constants";
 import { Category } from "@/app/generated/prisma";
 import db from "@/lib/db";
 
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
                 }
             }
 
-            const isEventExist = await db.event.findFirst({ where: { id } });
+            const isEventExist = await db.event.findUnique({ where: { id } });
 
             const agesSet = new Set<number>();
             for (const ageRange of ages) {
@@ -89,12 +89,10 @@ export async function POST(request: Request) {
             }
 
             if (isEventExist) {
-                const changedFields = Object.entries(event)
-                    .filter(([key, value]) => {
-                        const isEventExistKey = key as keyof typeof isEventExist;
-                        return isEventExist[isEventExistKey] !== value;
-                    })
-                    .map(([key]) => key);
+                const changedFields = Object.entries(event).filter(([key, value]) => {
+                    const isEventExistKey = key as keyof typeof isEventExist;
+                    return isEventExist[isEventExistKey] !== value;
+                });
 
                 if (changedFields.length > 0) {
                     await db.event.update({
@@ -117,8 +115,11 @@ export async function POST(request: Request) {
                             sportDisciplineId: sportDisciplineRecord.id,
                         },
                     });
-
-                    messages.push(`Обновление: событие ${event.id} было обновлено `);
+                    let message = `\n${title} (${id}):\n`;
+                    changedFields.forEach(([key, value]) => {
+                        message += `- ${key}: ${value}\n`;
+                    });
+                    updateMessages.push(message);
                 } else {
                     await db.event.update({
                         where: { id },
@@ -147,7 +148,7 @@ export async function POST(request: Request) {
                     },
                 });
 
-                messages.push(`Создание:новое событие ${event.id} было добавлено `);
+                createMessages.push(`${title} (${id})`);
             }
         }
         return NextResponse.json({ message: "Success" }, { status: 201 });

@@ -44,7 +44,7 @@ export function EventDialog({ isOpen, setIsOpen, event, userEventIds }: Props): 
 
             const subject = `Участие в событии ${event?.name} (${event?.id})`;
 
-            const body = `Вы участвуете в событии ${event?.name} (${event?.id}), которое пройдет в период c ${event?.start} по ${event?.end}.`;
+            const body = `Напоминаем: вы записались на событие ${event?.name} (${event?.id}), которое пройдет в период c ${event?.start.toLocaleDateString()} по ${event?.end.toLocaleDateString()}.`;
 
             const response = await subscribeOnEmailNotificationsRequest(user!.email, new Date(), subject, body);
 

@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 
-import { messages } from "@/app/api/data/constants";
+import { createMessages, updateMessages } from "@/app/api/data/constants";
 import { sendEmailNotificationsAboutUpdate } from "@/app/api/notification/notifications";
 import { getAllUserEmails } from "@/data/user";
 
 export async function POST() {
     try {
-        const body = messages.join("\n");
+        const body =
+            "НОВЫЕ СОБЫТИЯ:\n" + createMessages.join("\n") + "\n\nОБНОВЛЁННЫЕ СОБЫТИЯ:" + updateMessages.join("\n");
 
         const receivers = await getAllUserEmails();
 
@@ -22,7 +23,8 @@ export async function POST() {
             throw new Error(response.statusText);
         }
 
-        messages.splice(0);
+        createMessages.splice(0);
+        updateMessages.splice(0);
 
         return NextResponse.json({ message: "Success" }, { status: 200 });
     } catch (error) {

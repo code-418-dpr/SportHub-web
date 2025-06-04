@@ -1,5 +1,7 @@
+"use server";
+
 export async function sendEmailNotificationsAboutUpdate(receivers: string[], subject: string, body: string) {
-    return fetch("http://localhost:5265/email-notification-about-update", {
+    return fetch(`${process.env.NOTIFICATION_SERVICE_URL}/email-notification-about-update`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -17,8 +19,8 @@ export async function subscribeOnEmailNotificationsRequest(
     competitionDate: Date,
     subject: string,
     body: string,
-): Promise<Response> {
-    return fetch("http://localhost:5265/email-notification", {
+) {
+    return fetch(`${process.env.NOTIFICATION_SERVICE_URL}/email-notification`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
