@@ -5,7 +5,7 @@ import { UserRole } from "@/app/generated/prisma";
 declare module "next-auth" {
     interface User {
         id: string;
-        role: UserRole;
+        role: UserRole | null;
         name?: string | null;
         email: string;
         isOAuth?: boolean;

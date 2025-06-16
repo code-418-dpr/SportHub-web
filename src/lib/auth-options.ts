@@ -45,10 +45,17 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
+        signIn({ user, account }) {
+            if (account?.provider !== "credentials" && !user.role) {
+                user.role = "USER";
+            }
+            return true;
+        },
         jwt({ token, user }) {
             if (user as User | undefined) {
-                token.role = user.role;
+                token.role = user.role ?? "USER";
                 token.id = user.id;
+                token.isOAuth = !!(user as User).isOAuth;
             }
             return token;
         },

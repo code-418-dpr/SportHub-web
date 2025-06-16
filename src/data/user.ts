@@ -14,7 +14,7 @@ export const getUserById = async (id: string) => {
 
 export const createUser = async (email: string, password: string) => {
     const hashedPassword = await bcrypt.hash(password, 10);
-    return db.user.create({ data: { email, password: hashedPassword } });
+    return db.user.create({ data: { email, password: hashedPassword, role: "USER" } });
 };
 
 export const getAllUserEmails = async () => {
